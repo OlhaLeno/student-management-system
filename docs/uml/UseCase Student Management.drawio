@@ -1,0 +1,289 @@
+<mxfile host="app.diagrams.net" agent="ChatGPT">
+  <diagram id="student-management-usecase-extend-v3" name="Use Case — розширення CRUD">
+    <mxGraphModel dx="2555" dy="1325" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="2140" pageHeight="3060" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="system_outline" parent="1" style="rounded=0;arcSize=6;whiteSpace=wrap;html=1;fillColor=#fff;strokeColor=#24344c;strokeWidth=2.8;" value="" vertex="1">
+          <mxGeometry height="2890" width="1790" x="315" y="82" as="geometry" />
+        </mxCell>
+        <mxCell id="divider_0" parent="1" style="rounded=0;arcSize=6;whiteSpace=wrap;html=1;fillColor=#e2e9f1;strokeColor=#e2e9f1;strokeWidth=0.1;" value="" vertex="1">
+          <mxGeometry height="1" width="1658" x="385" y="945" as="geometry" />
+        </mxCell>
+        <mxCell id="divider_1" parent="1" style="rounded=0;arcSize=6;whiteSpace=wrap;html=1;fillColor=#e2e9f1;strokeColor=#e2e9f1;strokeWidth=0.1;" value="" vertex="1">
+          <mxGeometry height="1" width="1658" x="385" y="1790" as="geometry" />
+        </mxCell>
+        <mxCell id="divider_2" parent="1" style="rounded=0;arcSize=6;whiteSpace=wrap;html=1;fillColor=#e2e9f1;strokeColor=#e2e9f1;strokeWidth=0.1;" value="" vertex="1">
+          <mxGeometry height="1" width="1658" x="385" y="2100" as="geometry" />
+        </mxCell>
+        <mxCell id="divider_3" parent="1" style="rounded=0;arcSize=6;whiteSpace=wrap;html=1;fillColor=#e2e9f1;strokeColor=#e2e9f1;strokeWidth=0.1;" value="" vertex="1">
+          <mxGeometry height="1" width="1658" x="385" y="2364" as="geometry" />
+        </mxCell>
+        <mxCell id="divider_4" parent="1" style="rounded=0;arcSize=6;whiteSpace=wrap;html=1;fillColor=#e2e9f1;strokeColor=#e2e9f1;strokeWidth=0.1;" value="" vertex="1">
+          <mxGeometry height="1" width="1658" x="385" y="2638" as="geometry" />
+        </mxCell>
+        <mxCell id="extend_institutes_1" edge="1" parent="1" source="institutes_action_1" style="edgeStyle=none;html=1;rounded=0;strokeWidth=1.7;strokeColor=#607caa;dashed=1;dashPattern=8 5;endArrow=open;endFill=0;endSize=11;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=1;entryY=0.22;entryDx=0;entryDy=0;fontSize=16;" target="institutes_list" value="«extend»">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="extend_institutes_2" edge="1" parent="1" source="institutes_action_2" style="edgeStyle=none;html=1;rounded=0;strokeWidth=1.7;strokeColor=#607caa;dashed=1;dashPattern=8 5;endArrow=open;endFill=0;endSize=11;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=1;entryY=0.49;entryDx=0;entryDy=0;fontSize=16;" target="institutes_list" value="«extend»">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="extend_institutes_3" edge="1" parent="1" source="institutes_action_3" style="edgeStyle=none;html=1;rounded=0;strokeWidth=1.7;strokeColor=#607caa;dashed=1;dashPattern=8 5;endArrow=open;endFill=0;endSize=11;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=1;entryY=0.78;entryDx=0;entryDy=0;fontSize=16;" target="institutes_list" value="«extend»">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="assoc_institutes" edge="1" parent="1" source="actor_records" style="edgeStyle=none;html=1;rounded=0;strokeWidth=1.4;strokeColor=#92a5bb;endArrow=none;startArrow=none;exitX=0.5;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;exitPerimeter=0;" target="institutes_list" value="">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="204" y="530" as="sourcePoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="extend_specialties_1" edge="1" parent="1" source="specialties_action_1" style="edgeStyle=none;html=1;rounded=0;strokeWidth=1.7;strokeColor=#607caa;dashed=1;dashPattern=8 5;endArrow=open;endFill=0;endSize=11;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=1;entryY=0.22;entryDx=0;entryDy=0;fontSize=16;" target="specialties_list" value="«extend»">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="extend_specialties_2" edge="1" parent="1" source="specialties_action_2" style="edgeStyle=none;html=1;rounded=0;strokeWidth=1.7;strokeColor=#607caa;dashed=1;dashPattern=8 5;endArrow=open;endFill=0;endSize=11;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=1;entryY=0.49;entryDx=0;entryDy=0;fontSize=16;" target="specialties_list" value="«extend»">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="extend_specialties_3" edge="1" parent="1" source="specialties_action_3" style="edgeStyle=none;html=1;rounded=0;strokeWidth=1.7;strokeColor=#607caa;dashed=1;dashPattern=8 5;endArrow=open;endFill=0;endSize=11;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=1;entryY=0.78;entryDx=0;entryDy=0;fontSize=16;" target="specialties_list" value="«extend»">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="assoc_specialties" edge="1" parent="1" source="actor_records" style="edgeStyle=none;html=1;rounded=0;strokeWidth=1.4;strokeColor=#92a5bb;endArrow=none;startArrow=none;exitX=0.5;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;exitPerimeter=0;" target="specialties_list" value="">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="204" y="530" as="sourcePoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="extend_groups_1" edge="1" parent="1" source="groups_action_1" style="edgeStyle=none;html=1;rounded=0;strokeWidth=1.7;strokeColor=#607caa;dashed=1;dashPattern=8 5;endArrow=open;endFill=0;endSize=11;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=1;entryY=0.22;entryDx=0;entryDy=0;fontSize=16;" target="groups_list" value="«extend»">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="extend_groups_2" edge="1" parent="1" source="groups_action_2" style="edgeStyle=none;html=1;rounded=0;strokeWidth=1.7;strokeColor=#607caa;dashed=1;dashPattern=8 5;endArrow=open;endFill=0;endSize=11;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=1;entryY=0.49;entryDx=0;entryDy=0;fontSize=16;" target="groups_list" value="«extend»">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="extend_groups_3" edge="1" parent="1" source="groups_action_3" style="edgeStyle=none;html=1;rounded=0;strokeWidth=1.7;strokeColor=#607caa;dashed=1;dashPattern=8 5;endArrow=open;endFill=0;endSize=11;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=1;entryY=0.78;entryDx=0;entryDy=0;fontSize=16;" target="groups_list" value="«extend»">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="assoc_groups" edge="1" parent="1" source="actor_records" style="edgeStyle=none;html=1;rounded=0;strokeWidth=1.4;strokeColor=#92a5bb;endArrow=none;startArrow=none;exitX=0.5;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;exitPerimeter=0;" target="groups_list" value="">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="204" y="530" as="sourcePoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="extend_students_1" edge="1" parent="1" source="students_action_1" style="edgeStyle=none;html=1;rounded=0;strokeWidth=1.7;strokeColor=#607caa;dashed=1;dashPattern=8 5;endArrow=open;endFill=0;endSize=11;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=1;entryY=0.22;entryDx=0;entryDy=0;fontSize=16;" target="students_list" value="«extend»">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="extend_students_2" edge="1" parent="1" source="students_action_2" style="edgeStyle=none;html=1;rounded=0;strokeWidth=1.7;strokeColor=#607caa;dashed=1;dashPattern=8 5;endArrow=open;endFill=0;endSize=11;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=1;entryY=0.49;entryDx=0;entryDy=0;fontSize=16;" target="students_list" value="«extend»">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="extend_students_3" edge="1" parent="1" source="students_action_3" style="edgeStyle=none;html=1;rounded=0;strokeWidth=1.7;strokeColor=#607caa;dashed=1;dashPattern=8 5;endArrow=open;endFill=0;endSize=11;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=1;entryY=0.78;entryDx=0;entryDy=0;fontSize=17;" target="students_list" value="«extend»">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="assoc_students" edge="1" parent="1" source="actor_records" style="edgeStyle=none;html=1;rounded=0;strokeWidth=1.4;strokeColor=#92a5bb;endArrow=none;startArrow=none;exitX=0.5;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;exitPerimeter=0;" target="students_list" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="extend_teachers_1" edge="1" parent="1" source="teachers_action_1" style="edgeStyle=none;html=1;rounded=0;strokeWidth=1.7;strokeColor=#607caa;dashed=1;dashPattern=8 5;endArrow=open;endFill=0;endSize=11;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=1;entryY=0.22;entryDx=0;entryDy=0;fontSize=17;" target="teachers_list" value="«extend»">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="extend_teachers_2" edge="1" parent="1" source="teachers_action_2" style="edgeStyle=none;html=1;rounded=0;strokeWidth=1.7;strokeColor=#607caa;dashed=1;dashPattern=8 5;endArrow=open;endFill=0;endSize=11;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=1;entryY=0.49;entryDx=0;entryDy=0;fontSize=16;" target="teachers_list" value="«extend»">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="extend_teachers_3" edge="1" parent="1" source="teachers_action_3" style="edgeStyle=none;html=1;rounded=0;strokeWidth=1.7;strokeColor=#607caa;dashed=1;dashPattern=8 5;endArrow=open;endFill=0;endSize=11;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=1;entryY=0.78;entryDx=0;entryDy=0;fontSize=16;" target="teachers_list" value="«extend»">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="assoc_teachers" edge="1" parent="1" source="actor_records" style="edgeStyle=none;html=1;rounded=0;strokeWidth=1.4;strokeColor=#92a5bb;endArrow=none;startArrow=none;exitX=0.5;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;exitPerimeter=0;" target="teachers_list" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="extend_subjects_1" edge="1" parent="1" source="subjects_action_1" style="edgeStyle=none;html=1;rounded=0;strokeWidth=1.7;strokeColor=#607caa;dashed=1;dashPattern=8 5;endArrow=open;endFill=0;endSize=11;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=1;entryY=0.22;entryDx=0;entryDy=0;fontSize=17;" target="subjects_list" value="«extend»">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="extend_subjects_2" edge="1" parent="1" source="subjects_action_2" style="edgeStyle=none;html=1;rounded=0;strokeWidth=1.7;strokeColor=#607caa;dashed=1;dashPattern=8 5;endArrow=open;endFill=0;endSize=11;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=1;entryY=0.49;entryDx=0;entryDy=0;fontSize=16;" target="subjects_list" value="«extend»">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="extend_subjects_3" edge="1" parent="1" source="subjects_action_3" style="edgeStyle=none;html=1;rounded=0;strokeWidth=1.7;strokeColor=#607caa;dashed=1;dashPattern=8 5;endArrow=open;endFill=0;endSize=11;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=1;entryY=0.78;entryDx=0;entryDy=0;fontSize=16;" target="subjects_list" value="«extend»">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="assoc_subjects" edge="1" parent="1" source="actor_records" style="edgeStyle=none;html=1;rounded=0;strokeWidth=1.4;strokeColor=#92a5bb;endArrow=none;startArrow=none;exitX=0.5;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;exitPerimeter=0;" target="subjects_list" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="gen_exam" edge="1" parent="1" source="assessment_exam" style="edgeStyle=none;html=1;rounded=0;strokeWidth=1.7;strokeColor=#6b7f99;endArrow=block;endFill=0;endSize=14;exitX=0;exitY=0.5;exitDx=0;exitDy=0;" target="assessment_general" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="gen_credit" edge="1" parent="1" source="assessment_credit" style="edgeStyle=none;html=1;rounded=0;strokeWidth=1.7;strokeColor=#6b7f99;endArrow=block;endFill=0;endSize=14;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" target="assessment_general" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="assoc_assessment" edge="1" parent="1" source="actor_records" style="edgeStyle=none;html=1;rounded=0;strokeWidth=1.4;strokeColor=#92a5bb;endArrow=none;startArrow=none;exitX=0.5;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;exitPerimeter=0;" target="assessment_general" value="">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="204" y="2155" as="sourcePoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="assoc_view_grades" edge="1" parent="1" source="actor_records" style="edgeStyle=none;html=1;rounded=0;strokeWidth=1.4;strokeColor=#92a5bb;endArrow=none;startArrow=none;exitX=0.5;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;exitPerimeter=0;" target="grade_view" value="">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="204" y="2155" as="sourcePoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="assoc_view_perf" edge="1" parent="1" source="actor_records" style="edgeStyle=none;html=1;rounded=0;strokeWidth=1.4;strokeColor=#92a5bb;endArrow=none;startArrow=none;exitX=0.5;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;exitPerimeter=0;" target="performance_view" value="">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="204" y="2155" as="sourcePoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="incl_avg" edge="1" parent="1" source="performance_view" style="edgeStyle=none;html=1;rounded=0;strokeWidth=1.7;strokeColor=#5b987e;dashed=1;dashPattern=8 5;endArrow=open;endFill=0;endSize=11;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;fontSize=16;" target="avg_calc" value="«include»">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="incl_debt" edge="1" parent="1" source="performance_view" style="edgeStyle=none;html=1;rounded=0;strokeWidth=1.7;strokeColor=#5b987e;dashed=1;dashPattern=8 5;endArrow=open;endFill=0;endSize=11;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;fontSize=17;" target="debt_calc" value="«include»">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="ext_schedule_add" edge="1" parent="1" source="schedule_add" style="edgeStyle=none;html=1;rounded=0;strokeWidth=1.7;strokeColor=#607caa;dashed=1;dashPattern=8 5;endArrow=open;endFill=0;endSize=11;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=1;entryY=0.24;entryDx=0;entryDy=0;fontSize=16;" target="schedule_list" value="«extend»">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="ext_schedule_edit" edge="1" parent="1" source="schedule_edit" style="edgeStyle=none;html=1;rounded=0;strokeWidth=1.7;strokeColor=#607caa;dashed=1;dashPattern=8 5;endArrow=open;endFill=0;endSize=11;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=1;entryY=0.48;entryDx=0;entryDy=0;fontSize=16;" target="schedule_list" value="«extend»">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="ext_schedule_delete" edge="1" parent="1" source="schedule_delete" style="edgeStyle=none;html=1;rounded=0;strokeWidth=1.7;strokeColor=#607caa;dashed=1;dashPattern=8 5;endArrow=open;endFill=0;endSize=11;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=1;entryY=0.74;entryDx=0;entryDy=0;fontSize=16;" target="schedule_list" value="«extend»">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="assoc_schedule" edge="1" parent="1" source="actor_records" style="edgeStyle=none;html=1;rounded=0;strokeWidth=1.4;strokeColor=#92a5bb;endArrow=none;startArrow=none;exitX=0.5;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;exitPerimeter=0;" target="schedule_list" value="">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="204.00000000000045" y="2643" as="sourcePoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="gen_report_groups" edge="1" parent="1" source="report_groups" style="edgeStyle=none;html=1;rounded=0;strokeWidth=1.7;strokeColor=#6b7f99;endArrow=block;endFill=0;endSize=14;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=1;entryY=0;entryDx=0;entryDy=0;" target="report_general" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="gen_report_teachers" edge="1" parent="1" source="report_teachers" style="edgeStyle=none;html=1;rounded=0;strokeWidth=1.7;strokeColor=#6b7f99;endArrow=block;endFill=0;endSize=14;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" target="report_general" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="gen_report_debts" edge="1" parent="1" source="report_debts" style="edgeStyle=none;html=1;rounded=0;strokeWidth=1.7;strokeColor=#6b7f99;endArrow=block;endFill=0;endSize=14;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=1;entryY=1;entryDx=0;entryDy=0;" target="report_general" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="assoc_reports" edge="1" parent="1" source="actor_records" style="edgeStyle=none;html=1;rounded=0;strokeWidth=1.4;strokeColor=#92a5bb;endArrow=none;startArrow=none;exitX=0.5;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;exitPerimeter=0;" target="report_general" value="">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="204.00000000000045" y="2643" as="sourcePoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="actor_records" parent="1" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;strokeColor=#52667F;fillColor=#FFFFFF;strokeWidth=2;" value="" vertex="1">
+          <mxGeometry height="160" width="88" x="60" y="1303" as="geometry" />
+        </mxCell>
+        <mxCell id="institutes_list" parent="1" style="ellipse;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fillColor=#fff2d2;strokeColor=#e4ab3e;strokeWidth=1.9;fontSize=23;fontFamily=Arial;fontColor=#24344c;spacing=3;" value="Переглянути список&lt;br&gt;інститутів" vertex="1">
+          <mxGeometry height="76" width="577" x="525" y="257" as="geometry" />
+        </mxCell>
+        <mxCell id="institutes_action_1" parent="1" style="ellipse;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fillColor=#e7f0ff;strokeColor=#6f9cda;strokeWidth=1.9;fontSize=21;fontFamily=Arial;fontColor=#24344c;spacing=3;" value="Додати інститут" vertex="1">
+          <mxGeometry height="58" width="545" x="1430" y="185" as="geometry" />
+        </mxCell>
+        <mxCell id="institutes_action_2" parent="1" style="ellipse;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fillColor=#e7f0ff;strokeColor=#6f9cda;strokeWidth=1.9;fontSize=21;fontFamily=Arial;fontColor=#24344c;spacing=3;" value="Редагувати дані інституту" vertex="1">
+          <mxGeometry height="58" width="545" x="1430" y="260" as="geometry" />
+        </mxCell>
+        <mxCell id="institutes_action_3" parent="1" style="ellipse;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fillColor=#e7f0ff;strokeColor=#6f9cda;strokeWidth=1.9;fontSize=21;fontFamily=Arial;fontColor=#24344c;spacing=3;" value="Видалити інститут" vertex="1">
+          <mxGeometry height="58" width="545" x="1430" y="335" as="geometry" />
+        </mxCell>
+        <mxCell id="specialties_list" parent="1" style="ellipse;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fillColor=#fff2d2;strokeColor=#e4ab3e;strokeWidth=1.9;fontSize=23;fontFamily=Arial;fontColor=#24344c;spacing=3;" value="Переглянути список&lt;br&gt;спеціальностей" vertex="1">
+          <mxGeometry height="76" width="577" x="525" y="517" as="geometry" />
+        </mxCell>
+        <mxCell id="specialties_action_1" parent="1" style="ellipse;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fillColor=#e7f0ff;strokeColor=#6f9cda;strokeWidth=1.9;fontSize=21;fontFamily=Arial;fontColor=#24344c;spacing=3;" value="Додати спеціальність" vertex="1">
+          <mxGeometry height="58" width="545" x="1430" y="445" as="geometry" />
+        </mxCell>
+        <mxCell id="specialties_action_2" parent="1" style="ellipse;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fillColor=#e7f0ff;strokeColor=#6f9cda;strokeWidth=1.9;fontSize=20;fontFamily=Arial;fontColor=#24344c;spacing=3;" value="Редагувати дані спеціальності" vertex="1">
+          <mxGeometry height="58" width="545" x="1430" y="520" as="geometry" />
+        </mxCell>
+        <mxCell id="specialties_action_3" parent="1" style="ellipse;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fillColor=#e7f0ff;strokeColor=#6f9cda;strokeWidth=1.9;fontSize=21;fontFamily=Arial;fontColor=#24344c;spacing=3;" value="Видалити спеціальність" vertex="1">
+          <mxGeometry height="58" width="545" x="1430" y="595" as="geometry" />
+        </mxCell>
+        <mxCell id="groups_list" parent="1" style="ellipse;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fillColor=#fff2d2;strokeColor=#e4ab3e;strokeWidth=1.9;fontSize=23;fontFamily=Arial;fontColor=#24344c;spacing=3;" value="Переглянути список&lt;br&gt;академічних груп" vertex="1">
+          <mxGeometry height="76" width="577" x="525" y="777" as="geometry" />
+        </mxCell>
+        <mxCell id="groups_action_1" parent="1" style="ellipse;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fillColor=#e7f0ff;strokeColor=#6f9cda;strokeWidth=1.9;fontSize=21;fontFamily=Arial;fontColor=#24344c;spacing=3;" value="Додати академічну групу" vertex="1">
+          <mxGeometry height="58" width="545" x="1430" y="705" as="geometry" />
+        </mxCell>
+        <mxCell id="groups_action_2" parent="1" style="ellipse;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fillColor=#e7f0ff;strokeColor=#6f9cda;strokeWidth=1.9;fontSize=20;fontFamily=Arial;fontColor=#24344c;spacing=3;" value="Редагувати дані&lt;br&gt;академічної групи" vertex="1">
+          <mxGeometry height="58" width="545" x="1430" y="780" as="geometry" />
+        </mxCell>
+        <mxCell id="groups_action_3" parent="1" style="ellipse;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fillColor=#e7f0ff;strokeColor=#6f9cda;strokeWidth=1.9;fontSize=21;fontFamily=Arial;fontColor=#24344c;spacing=3;" value="Видалити академічну групу" vertex="1">
+          <mxGeometry height="58" width="545" x="1430" y="855" as="geometry" />
+        </mxCell>
+        <mxCell id="students_list" parent="1" style="ellipse;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fillColor=#fff2d2;strokeColor=#e4ab3e;strokeWidth=1.9;fontSize=23;fontFamily=Arial;fontColor=#24344c;spacing=3;" value="Переглянути список&lt;br&gt;студентів" vertex="1">
+          <mxGeometry height="76" width="577" x="525" y="1098" as="geometry" />
+        </mxCell>
+        <mxCell id="students_action_1" parent="1" style="ellipse;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fillColor=#e7f0ff;strokeColor=#6f9cda;strokeWidth=1.9;fontSize=21;fontFamily=Arial;fontColor=#24344c;spacing=3;" value="Додати студента" vertex="1">
+          <mxGeometry height="58" width="545" x="1430" y="1026" as="geometry" />
+        </mxCell>
+        <mxCell id="students_action_2" parent="1" style="ellipse;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fillColor=#e7f0ff;strokeColor=#6f9cda;strokeWidth=1.9;fontSize=21;fontFamily=Arial;fontColor=#24344c;spacing=3;" value="Редагувати дані студента" vertex="1">
+          <mxGeometry height="58" width="545" x="1430" y="1101" as="geometry" />
+        </mxCell>
+        <mxCell id="students_action_3" parent="1" style="ellipse;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fillColor=#e7f0ff;strokeColor=#6f9cda;strokeWidth=1.9;fontSize=21;fontFamily=Arial;fontColor=#24344c;spacing=3;" value="Видалити студента" vertex="1">
+          <mxGeometry height="58" width="545" x="1430" y="1176" as="geometry" />
+        </mxCell>
+        <mxCell id="teachers_list" parent="1" style="ellipse;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fillColor=#fff2d2;strokeColor=#e4ab3e;strokeWidth=1.9;fontSize=23;fontFamily=Arial;fontColor=#24344c;spacing=3;" value="Переглянути список&lt;br&gt;викладачів" vertex="1">
+          <mxGeometry height="76" width="577" x="525" y="1358" as="geometry" />
+        </mxCell>
+        <mxCell id="teachers_action_1" parent="1" style="ellipse;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fillColor=#e7f0ff;strokeColor=#6f9cda;strokeWidth=1.9;fontSize=21;fontFamily=Arial;fontColor=#24344c;spacing=3;" value="Додати викладача" vertex="1">
+          <mxGeometry height="58" width="545" x="1430" y="1286" as="geometry" />
+        </mxCell>
+        <mxCell id="teachers_action_2" parent="1" style="ellipse;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fillColor=#e7f0ff;strokeColor=#6f9cda;strokeWidth=1.9;fontSize=21;fontFamily=Arial;fontColor=#24344c;spacing=3;" value="Редагувати дані викладача" vertex="1">
+          <mxGeometry height="58" width="545" x="1430" y="1361" as="geometry" />
+        </mxCell>
+        <mxCell id="teachers_action_3" parent="1" style="ellipse;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fillColor=#e7f0ff;strokeColor=#6f9cda;strokeWidth=1.9;fontSize=21;fontFamily=Arial;fontColor=#24344c;spacing=3;" value="Видалити викладача" vertex="1">
+          <mxGeometry height="58" width="545" x="1430" y="1436" as="geometry" />
+        </mxCell>
+        <mxCell id="subjects_list" parent="1" style="ellipse;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fillColor=#fff2d2;strokeColor=#e4ab3e;strokeWidth=1.9;fontSize=23;fontFamily=Arial;fontColor=#24344c;spacing=3;" value="Переглянути список&lt;br&gt;дисциплін" vertex="1">
+          <mxGeometry height="76" width="577" x="525" y="1618" as="geometry" />
+        </mxCell>
+        <mxCell id="subjects_action_1" parent="1" style="ellipse;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fillColor=#e7f0ff;strokeColor=#6f9cda;strokeWidth=1.9;fontSize=21;fontFamily=Arial;fontColor=#24344c;spacing=3;" value="Додати дисципліну" vertex="1">
+          <mxGeometry height="58" width="545" x="1430" y="1546" as="geometry" />
+        </mxCell>
+        <mxCell id="subjects_action_2" parent="1" style="ellipse;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fillColor=#e7f0ff;strokeColor=#6f9cda;strokeWidth=1.9;fontSize=21;fontFamily=Arial;fontColor=#24344c;spacing=3;" value="Редагувати дані дисципліни" vertex="1">
+          <mxGeometry height="58" width="545" x="1430" y="1621" as="geometry" />
+        </mxCell>
+        <mxCell id="subjects_action_3" parent="1" style="ellipse;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fillColor=#e7f0ff;strokeColor=#6f9cda;strokeWidth=1.9;fontSize=21;fontFamily=Arial;fontColor=#24344c;spacing=3;" value="Видалити дисципліну" vertex="1">
+          <mxGeometry height="58" width="545" x="1430" y="1696" as="geometry" />
+        </mxCell>
+        <mxCell id="assessment_general" parent="1" style="ellipse;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fillColor=#fff2d2;strokeColor=#e4ab3e;strokeWidth=1.9;fontSize=23;fontFamily=Arial;fontColor=#24344c;spacing=3;fontStyle=2;" value="Внести результат оцінювання" vertex="1">
+          <mxGeometry height="71" width="590" x="550" y="1928" as="geometry" />
+        </mxCell>
+        <mxCell id="assessment_exam" parent="1" style="ellipse;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fillColor=#e7f0ff;strokeColor=#6f9cda;strokeWidth=1.9;fontSize=21;fontFamily=Arial;fontColor=#24344c;spacing=3;" value="Внести результат іспиту&lt;br&gt;(0–100 балів)" vertex="1">
+          <mxGeometry height="67" width="545" x="1430" y="1867" as="geometry" />
+        </mxCell>
+        <mxCell id="assessment_credit" parent="1" style="ellipse;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fillColor=#e7f0ff;strokeColor=#6f9cda;strokeWidth=1.9;fontSize=19;fontFamily=Arial;fontColor=#24344c;spacing=3;" value="Внести результат заліку&lt;br&gt;(зараховано / не зараховано)" vertex="1">
+          <mxGeometry height="67" width="545" x="1430" y="1986" as="geometry" />
+        </mxCell>
+        <mxCell id="grade_view" parent="1" style="ellipse;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fillColor=#e7f0ff;strokeColor=#6f9cda;strokeWidth=1.9;fontSize=22;fontFamily=Arial;fontColor=#24344c;spacing=3;" value="Переглянути оцінки студента" vertex="1">
+          <mxGeometry height="66" width="606" x="515" y="2168" as="geometry" />
+        </mxCell>
+        <mxCell id="performance_view" parent="1" style="ellipse;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fillColor=#e7f0ff;strokeColor=#6f9cda;strokeWidth=1.9;fontSize=22;fontFamily=Arial;fontColor=#24344c;spacing=3;" value="Переглянути успішність студента" vertex="1">
+          <mxGeometry height="68" width="606" x="515" y="2253" as="geometry" />
+        </mxCell>
+        <mxCell id="avg_calc" parent="1" style="ellipse;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fillColor=#e9f5ed;strokeColor=#78b28f;strokeWidth=1.9;fontSize=21;fontFamily=Arial;fontColor=#24344c;spacing=3;" value="Розрахувати середній бал" vertex="1">
+          <mxGeometry height="66" width="510" x="1470" y="2168" as="geometry" />
+        </mxCell>
+        <mxCell id="debt_calc" parent="1" style="ellipse;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fillColor=#e9f5ed;strokeColor=#78b28f;strokeWidth=1.9;fontSize=21;fontFamily=Arial;fontColor=#24344c;spacing=3;" value="Визначити академічну&lt;br&gt;заборгованість" vertex="1">
+          <mxGeometry height="68" width="510" x="1470" y="2253" as="geometry" />
+        </mxCell>
+        <mxCell id="schedule_list" parent="1" style="ellipse;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fillColor=#fff2d2;strokeColor=#e4ab3e;strokeWidth=1.9;fontSize=23;fontFamily=Arial;fontColor=#24344c;spacing=3;" value="Переглянути розклад" vertex="1">
+          <mxGeometry height="71" width="577" x="525" y="2495" as="geometry" />
+        </mxCell>
+        <mxCell id="schedule_add" parent="1" style="ellipse;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fillColor=#e7f0ff;strokeColor=#6f9cda;strokeWidth=1.9;fontSize=20;fontFamily=Arial;fontColor=#24344c;spacing=3;" value="Додати заняття до розкладу" vertex="1">
+          <mxGeometry height="57" width="545" x="1430" y="2437" as="geometry" />
+        </mxCell>
+        <mxCell id="schedule_edit" parent="1" style="ellipse;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fillColor=#e7f0ff;strokeColor=#6f9cda;strokeWidth=1.9;fontSize=20;fontFamily=Arial;fontColor=#24344c;spacing=3;" value="Редагувати запис розкладу" vertex="1">
+          <mxGeometry height="57" width="545" x="1430" y="2502" as="geometry" />
+        </mxCell>
+        <mxCell id="schedule_delete" parent="1" style="ellipse;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fillColor=#e7f0ff;strokeColor=#6f9cda;strokeWidth=1.9;fontSize=20;fontFamily=Arial;fontColor=#24344c;spacing=3;" value="Видалити запис розкладу" vertex="1">
+          <mxGeometry height="57" width="545" x="1430" y="2567" as="geometry" />
+        </mxCell>
+        <mxCell id="report_general" parent="1" style="ellipse;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fillColor=#fff2d2;strokeColor=#e4ab3e;strokeWidth=1.9;fontSize=23;fontFamily=Arial;fontColor=#24344c;spacing=3;fontStyle=2;" value="Сформувати звіт" vertex="1">
+          <mxGeometry height="78" width="590" x="550" y="2776" as="geometry" />
+        </mxCell>
+        <mxCell id="report_groups" parent="1" style="ellipse;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fillColor=#e7f0ff;strokeColor=#6f9cda;strokeWidth=1.9;fontSize=19;fontFamily=Arial;fontColor=#24344c;spacing=3;" value="Сформувати звіт про успішність&lt;br&gt;за групами та курсами" vertex="1">
+          <mxGeometry height="58" width="545" x="1430" y="2715" as="geometry" />
+        </mxCell>
+        <mxCell id="report_teachers" parent="1" style="ellipse;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fillColor=#e7f0ff;strokeColor=#6f9cda;strokeWidth=1.9;fontSize=19;fontFamily=Arial;fontColor=#24344c;spacing=3;" value="Сформувати звіт про середні&lt;br&gt;оцінки за викладачами" vertex="1">
+          <mxGeometry height="58" width="545" x="1430" y="2794" as="geometry" />
+        </mxCell>
+        <mxCell id="report_debts" parent="1" style="ellipse;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fillColor=#e7f0ff;strokeColor=#6f9cda;strokeWidth=1.9;fontSize=19;fontFamily=Arial;fontColor=#24344c;spacing=3;" value="Сформувати звіт про&lt;br&gt;академічну заборгованість" vertex="1">
+          <mxGeometry height="58" width="545" x="1430" y="2873" as="geometry" />
+        </mxCell>
+        <mxCell id="heading" parent="1" style="text;html=1;align=center;verticalAlign=middle;strokeColor=none;fillColor=none;fontFamily=Arial;fontSize=34;fontStyle=1;fontColor=#24344c;whiteSpace=wrap;" value="Система обліку студентів у ВНЗ" vertex="1">
+          <mxGeometry height="45" width="1300" x="510" y="18" as="geometry" />
+        </mxCell>
+        <mxCell id="actor_records_name" parent="1" style="text;html=1;align=center;verticalAlign=middle;strokeColor=none;fillColor=none;fontFamily=Arial;fontSize=22;fontStyle=1;fontColor=#24344c;whiteSpace=wrap;" value="Працівник&lt;br&gt;навчального відділу" vertex="1">
+          <mxGeometry height="46" width="200" x="10" y="1484" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
