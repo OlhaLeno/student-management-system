@@ -1,5 +1,5 @@
-
 from app.dal.database import db
+from sqlalchemy.orm import validates
 
 group_subject = db.Table(
     "group_subjects",
@@ -122,3 +122,20 @@ class ScheduleEntry(db.Model):
     subject = db.relationship(
         "Subject", back_populates="schedule_entries"
     )
+    @property
+    def day_name(self):
+        days = {
+            1: "Понеділок",
+            2: "Вівторок",
+            3: "Середа",
+            4: "Четвер",
+            5: "П'ятниця",
+        }
+
+        return days.get(self.day, "Невідомий день")
+
+    @validates("day")
+    def validate_day(self, key, value):
+        if type(value) is not int or value not in range(1, 6):
+            raise ValueError("Заняття можуть проводитись лише з понеділка до п'ятниці.")
+        return value
