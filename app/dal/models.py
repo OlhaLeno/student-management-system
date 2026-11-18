@@ -109,6 +109,13 @@ class Subject(db.Model):
 
 class ScheduleEntry(db.Model):
     __tablename__ = "schedule_entries"
+    
+    __table_args__ = (
+        db.CheckConstraint(
+            "day IN (1, 2, 3, 4, 5)",
+            name="check_schedule_day"
+        ),
+    )
 
     id = db.Column(db.Integer, primary_key=True)
     group_id = db.Column(
@@ -117,7 +124,7 @@ class ScheduleEntry(db.Model):
     subject_id = db.Column(
         db.Integer, db.ForeignKey("subjects.id"), nullable=False
     )
-    day = db.Column(db.String(10), nullable=False)
+    day = db.Column(db.Integer, nullable=False)
     start_time = db.Column(db.Time, nullable=False)
     end_time = db.Column(db.Time, nullable=False)
     classroom = db.Column(db.String(50), nullable=False)
