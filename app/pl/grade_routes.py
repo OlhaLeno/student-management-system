@@ -2,7 +2,6 @@ from flask import request
 
 from app.bll.grade_service import GradeService
 from app.bll.student_service import StudentService
-from app.bll.teaching_service import SubjectService
 from app.bll.performance_facade import PerformanceFacade
 from app.pl.api_utils import make_api, get_data, positive_int, query_int
 
@@ -42,11 +41,6 @@ def grades():
         kind = data.get("kind")
         if kind not in ("exam", "credit"):
             raise ValueError("Обрати можна лише іспит або залік.")
-
-        student = StudentService().get_by_id(student_id)
-        subject = SubjectService().get_by_id(subject_id)
-        if subject not in student.group.subjects:
-            raise ValueError("Академічна група студента не вивчає цю дисципліну.")
 
         if kind == "exam":
             grade = service.add_exam(student_id, subject_id, data.get("score"))

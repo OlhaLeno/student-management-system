@@ -157,6 +157,15 @@ class ScheduleEntry(db.Model):
 class Grade(db.Model):
     __tablename__ = "grades"
 
+    __table_args__ = (
+        db.Index(
+            "uq_grades_student_subject",
+            "student_id",
+            "subject_id",
+            unique=True
+        ),
+    )
+    
     id = db.Column(db.Integer, primary_key=True)
     student_id = db.Column(
         db.Integer, db.ForeignKey("students.id"), nullable=False
