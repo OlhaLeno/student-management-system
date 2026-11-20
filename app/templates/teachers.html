@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+{% from '_crud.html' import form_buttons, actions, empty_row %}
+{% block title %}Викладачі | Система обліку студентів{% endblock %}
+{% block content %}
+<h1 class="h3 mb-4">Викладачі</h1>
+<section class="card mb-3">
+    <div class="card-body">
+        <form id="teacher-form" data-api="/api/teachers" class="row g-2">
+            <div class="col-md-7">
+                <label class="form-label" for="teacher-name">ПІБ викладача</label>
+                <input class="form-control" id="teacher-name" name="full_name" maxlength="150" required>
+            </div>
+            {{ form_buttons() }}
+        </form>
+    </div>
+</section>
+<div class="table-responsive">
+    <table class="table table-bordered table-hover bg-white align-middle">
+        <thead class="table-light"><tr><th>№</th><th>ПІБ</th><th>Дії</th></tr></thead>
+        <tbody>
+        {% for item in teachers %}
+            <tr><td>{{ loop.index }}</td><td>{{ item.full_name }}</td><td>{{ actions('teacher-form', item, '/api/teachers') }}</td></tr>
+        {% else %}{{ empty_row(3) }}{% endfor %}
+        </tbody>
+    </table>
+</div>
+<p class="text-secondary">Усього викладачів: {{ teachers | length }}</p>
+{% endblock %}

@@ -1,0 +1,90 @@
+{% extends 'base.html' %}
+{% from '_crud.html' import form_buttons, actions, empty_row %}
+{% block title %}Структура університету | Система обліку студентів{% endblock %}
+{% block content %}
+<h1 class="h3 mb-4">Структура університету</h1>
+<section class="card mb-4">
+    <div class="card-body">
+        <h2 class="h5 mb-3">Інститути</h2>
+        <form id="institute-form" data-api="/api/institutes" class="row g-2 mb-3">
+            <div class="col-md-7">
+                <label class="form-label" for="institute-name">Назва інституту</label>
+                <input class="form-control" id="institute-name" name="name" maxlength="100" required>
+            </div>
+            {{ form_buttons() }}
+        </form>
+        <div class="table-responsive">
+            <table class="table table-bordered table-hover align-middle mb-0">
+                <thead class="table-light"><tr><th>№</th><th>Назва</th><th>Дії</th></tr></thead>
+                <tbody>
+                {% for item in institutes %}
+                    <tr><td>{{ loop.index }}</td><td>{{ item.name }}</td><td>{{ actions('institute-form', item, '/api/institutes') }}</td></tr>
+                {% else %}{{ empty_row(3) }}{% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>
+<section class="card mb-4">
+    <div class="card-body">
+        <h2 class="h5 mb-3">Спеціальності</h2>
+        <form id="specialty-form" data-api="/api/specialties" class="row g-2 mb-3">
+            <div class="col-md-4">
+                <label class="form-label" for="specialty-name">Назва спеціальності</label>
+                <input class="form-control" id="specialty-name" name="name" maxlength="100" required>
+            </div>
+            <div class="col-md-4">
+                <label class="form-label" for="specialty-institute">Інститут</label>
+                <select class="form-select" id="specialty-institute" name="institute_id" data-number required>
+                    <option value="">Оберіть інститут</option>
+                    {% for item in institutes %}<option value="{{ item.id }}">{{ item.name }}</option>{% endfor %}
+                </select>
+            </div>
+            {{ form_buttons() }}
+        </form>
+        <div class="table-responsive">
+            <table class="table table-bordered table-hover align-middle mb-0">
+                <thead class="table-light"><tr><th>№</th><th>Спеціальність</th><th>Інститут</th><th>Дії</th></tr></thead>
+                <tbody>
+                {% for item in specialties %}
+                    <tr><td>{{ loop.index }}</td><td>{{ item.name }}</td><td>{{ item.institute_name }}</td><td>{{ actions('specialty-form', item, '/api/specialties') }}</td></tr>
+                {% else %}{{ empty_row(4) }}{% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>
+<section class="card mb-4">
+    <div class="card-body">
+        <h2 class="h5 mb-3">Академічні групи</h2>
+        <form id="group-form" data-api="/api/groups" class="row g-2 mb-3">
+            <div class="col-md-3">
+                <label class="form-label" for="group-name">Назва групи</label>
+                <input class="form-control" id="group-name" name="name" maxlength="50" required>
+            </div>
+            <div class="col-md-2">
+                <label class="form-label" for="group-course">Курс</label>
+                <input class="form-control" id="group-course" name="course" type="number" min="1" step="1" required>
+            </div>
+            <div class="col-md-4">
+                <label class="form-label" for="group-specialty">Спеціальність</label>
+                <select class="form-select" id="group-specialty" name="specialty_id" data-number required>
+                    <option value="">Оберіть спеціальність</option>
+                    {% for item in specialties %}<option value="{{ item.id }}">{{ item.name }} ({{ item.institute_name }})</option>{% endfor %}
+                </select>
+            </div>
+            {{ form_buttons() }}
+        </form>
+        <div class="table-responsive">
+            <table class="table table-bordered table-hover align-middle mb-0">
+                <thead class="table-light"><tr><th>№</th><th>Група</th><th>Курс</th><th>Спеціальність</th><th>Інститут</th><th>Дії</th></tr></thead>
+                <tbody>
+                {% for item in groups %}
+                    <tr><td>{{ loop.index }}</td><td>{{ item.name }}</td><td>{{ item.course }}</td><td>{{ item.specialty_name }}</td><td>{{ item.institute_name }}</td><td>{{ actions('group-form', item, '/api/groups') }}</td></tr>
+                {% else %}{{ empty_row(6) }}{% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>
+{% endblock %}

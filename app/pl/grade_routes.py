@@ -1,6 +1,7 @@
 from flask import request
 
 from app.bll.grade_service import GradeService
+from app.dal.models import ExamGrade, CreditGrade
 from app.bll.student_service import StudentService
 from app.bll.performance_facade import PerformanceFacade
 from app.pl.api_utils import make_api, get_data, positive_int, query_int
@@ -70,3 +71,24 @@ def student_performance(student_id):
     data["student_name"] = student.full_name
     data["debt_status"] = "Є" if data["has_debt"] else "Немає"
     return data
+
+
+@grade_api.route("/grades/<int:grade_id>", methods=["GET", "PUT"])
+def grade_detail(grade_id):
+    service = GradeService()
+    grade = service.get_by_id(grade_id)
+
+    if request.method == "PUT":
+        data = get_data()
+        if isinstance(grade, ExamGrade):
+            if set(data) != {"score"}:
+                raise ValueError("Для іспиту потрібно передати лише поле score.")
+            grade = service.update_exam(grade_id, data["score"])
+        elif isinstance(grade, CreditGrade):
+            if set(data) != {"passed"}:
+                raise ValueError("Для заліку потрібно передати лише поле passed.")
+            grade = service.update_credit(grade_id, data["passed"])
+        else:
+            raise ValueError("Невідомий вид оцінювання.")
+
+    return grade_to_dict(grade)

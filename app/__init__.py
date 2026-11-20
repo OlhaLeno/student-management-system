@@ -7,6 +7,7 @@ from app.pl.grade_routes import grade_api
 from app.pl.report_routes import report_api
 from app.dal.database import db
 from app.pl.routes import api
+from app.pl.web_routes import web
 
 
 def create_app():
@@ -23,6 +24,7 @@ def create_app():
     app.register_blueprint(schedule_api)
     app.register_blueprint(grade_api)
     app.register_blueprint(report_api)
+    app.register_blueprint(web)
     app.json.ensure_ascii = False
 
     return app

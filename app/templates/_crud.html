@@ -1,0 +1,17 @@
+  {% macro form_buttons() %}
+    <div class="col-auto align-self-end">
+        <button class="btn btn-primary" type="submit">Додати</button>
+        <button class="btn btn-outline-secondary d-none" type="button" data-cancel>Скасувати</button>
+    </div>
+{% endmacro %}
+
+{% macro actions(form_id, record, endpoint) %}
+    <button class="btn btn-sm btn-outline-primary" type="button"
+            data-edit="{{ form_id }}" data-record='{{ record | tojson }}'>Редагувати</button>
+    <button class="btn btn-sm btn-outline-danger" type="button"
+            data-delete="{{ endpoint }}/{{ record.id }}">Видалити</button>
+{% endmacro %}
+
+{% macro empty_row(columns) %}
+    <tr><td colspan="{{ columns }}" class="text-secondary text-center">Записів поки немає.</td></tr>
+{% endmacro %}

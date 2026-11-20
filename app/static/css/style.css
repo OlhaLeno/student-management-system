@@ -1,0 +1,16 @@
+body {
+    background-color: #f5f6f8;
+    color: #212529;
+}
+
+header.bg-dark {
+    background-color: #34465b !important;
+}
+
+.nav-link {
+    color: #34465b;
+}
+
+.nav-link.active {
+    color: #215ba0;
+}
