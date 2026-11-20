@@ -80,7 +80,15 @@ def grade_detail(grade_id):
 
     if request.method == "PUT":
         data = get_data()
-        if isinstance(grade, ExamGrade):
+        if "kind" in data:
+            kind = data["kind"]
+            if kind == "exam" and set(data) == {"kind", "score"}:
+                grade = service.change_kind(grade_id, kind, data["score"])
+            elif kind == "credit" and set(data) == {"kind", "passed"}:
+                grade = service.change_kind(grade_id, kind, data["passed"])
+            else:
+                raise ValueError("Некоректний вид контролю або набір полів.")
+        elif isinstance(grade, ExamGrade):
             if set(data) != {"score"}:
                 raise ValueError("Для іспиту потрібно передати лише поле score.")
             grade = service.update_exam(grade_id, data["score"])

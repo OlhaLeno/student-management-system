@@ -197,24 +197,31 @@ if (gradeEditForm) {
     const panel = document.getElementById('grade-edit-panel');
     const examField = document.getElementById('grade-edit-exam-field');
     const creditField = document.getElementById('grade-edit-credit-field');
+    const editKind = document.getElementById('grade-edit-kind');
     const editScore = document.getElementById('grade-edit-score');
     const editPassed = document.getElementById('grade-edit-passed');
+
+    function updateEditFields() {
+        const isExam = editKind.value === 'exam';
+        examField.classList.toggle('d-none', !isExam);
+        creditField.classList.toggle('d-none', isExam);
+        editScore.disabled = !isExam;
+        editScore.required = isExam;
+        editPassed.disabled = isExam;
+        editPassed.required = !isExam;
+    }
+
+    editKind.addEventListener('change', updateEditFields);
 
     document.querySelectorAll('[data-grade-edit]').forEach(button => {
         button.addEventListener('click', () => {
             gradeEditForm.dataset.gradeId = button.dataset.gradeId;
-            gradeEditForm.dataset.kind = button.dataset.gradeKind;
-            const isExam = button.dataset.gradeKind === 'exam';
             document.getElementById('grade-edit-description').textContent =
-                `${button.dataset.gradeStudent} — ${button.dataset.gradeSubject} (${isExam ? 'іспит' : 'залік'})`;
-            examField.classList.toggle('d-none', !isExam);
-            creditField.classList.toggle('d-none', isExam);
-            editScore.disabled = !isExam;
-            editScore.required = isExam;
-            editPassed.disabled = isExam;
-            editPassed.required = !isExam;
+                `${button.dataset.gradeStudent} — ${button.dataset.gradeSubject}`;
+            editKind.value = button.dataset.gradeKind;
             editScore.value = button.dataset.gradeScore;
             editPassed.value = button.dataset.gradePassed;
+            updateEditFields();
             panel.classList.remove('d-none');
             panel.scrollIntoView({block: 'nearest'});
         });
@@ -230,9 +237,17 @@ if (gradeEditForm) {
         event.preventDefault();
         const id = gradeEditForm.dataset.gradeId;
         if (!id) return;
-        const data = gradeEditForm.dataset.kind === 'exam'
-            ? {score: Number(editScore.value)}
-            : {passed: editPassed.value === 'true'};
+
+        const data = {kind: editKind.value};
+        if (data.kind === 'exam') {
+            if (editScore.value.trim() === '') {
+                showError('Вкажіть оцінку за іспит.');
+                return;
+            }
+            data.score = Number(editScore.value);
+        } else {
+            data.passed = editPassed.value === 'true';
+        }
         saveAndReload(`/api/grades/${id}`, 'PUT', data,
             gradeEditForm.querySelector('[type="submit"]'));
     });

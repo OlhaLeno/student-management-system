@@ -49,6 +49,40 @@ class GradeService:
         commit()
         return grade
 
+    def change_kind(self, grade_id: int, kind: str, value) -> Grade:
+        grade = self.get_by_id(grade_id)
+        if kind not in ("exam", "credit"):
+            raise ValueError("Обрати можна лише іспит або залік.")
+
+        if kind == grade.kind:
+            if kind == "exam":
+                return self.update_exam(grade_id, value)
+            return self.update_credit(grade_id, value)
+
+        if kind == "exam":
+            if type(value) is not int or not 0 <= value <= 100:
+                raise ValueError("Оцінка за іспит має бути цілим числом від 0 до 100.")
+            replacement = self._exam_creator.create(
+                grade.student_id, grade.subject_id, value
+            )
+        else:
+            if type(value) is not bool:
+                raise ValueError("Результат заліку має бути true або false.")
+            replacement = self._credit_creator.create(
+                grade.student_id, grade.subject_id, value
+            )
+
+        replacement.id = grade.id
+        try:
+            db.session.delete(grade)
+            db.session.flush()
+            db.session.add(replacement)
+            commit()
+        except Exception:
+            db.session.rollback()
+            raise
+        return replacement
+
     def for_student(self, student_id: int) -> list[Grade]:
         return db.session.query(Grade).filter_by(student_id=student_id).all()
 

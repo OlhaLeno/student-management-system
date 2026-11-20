@@ -50,6 +50,13 @@
         <h2 class="h5 mb-2">Редагування результату</h2>
         <p id="grade-edit-description" class="text-secondary small"></p>
         <form id="grade-edit-form" class="row g-2">
+            <div class="col-md-3">
+                <label for="grade-edit-kind" class="form-label">Вид контролю</label>
+                <select id="grade-edit-kind" class="form-select" required>
+                    <option value="exam">Іспит</option>
+                    <option value="credit">Залік</option>
+                </select>
+            </div>
             <div id="grade-edit-exam-field" class="col-md-3">
                 <label for="grade-edit-score" class="form-label">Оцінка (0–100)</label>
                 <input id="grade-edit-score" class="form-control" type="number" min="0" max="100" step="1">
