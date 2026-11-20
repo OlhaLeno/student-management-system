@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+
+{% block title %}Головна | Система обліку студентів{% endblock %}
+
+{% block content %}
+    <h1 class="h3 mb-2">Головна</h1>
+    <p class="text-secondary mb-4">Система обліку студентів у закладі вищої освіти.</p>
+
+    <h2 class="h5 mb-3">Загальна інформація</h2>
+    <div class="row g-3">
+        {% for label, count in [
+            ('Студенти', student_count),
+            ('Викладачі', teacher_count),
+            ('Академічні групи', group_count),
+            ('Дисципліни', subject_count)
+        ] %}
+            <div class="col-6 col-lg-3">
+                <div class="card h-100">
+                    <div class="card-body">
+                        <h3 class="h6 text-secondary">{{ label }}</h3>
+                        <p class="fs-3 fw-semibold mb-0">{{ count }}</p>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+{% endblock %}

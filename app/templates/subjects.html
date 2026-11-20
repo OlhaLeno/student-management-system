@@ -1,0 +1,70 @@
+{% extends 'base.html' %}
+{% from '_crud.html' import form_buttons, actions, empty_row %}
+{% block title %}Дисципліни | Система обліку студентів{% endblock %}
+{% block content %}
+<h1 class="h3 mb-4">Дисципліни</h1>
+<section class="card mb-3">
+    <div class="card-body">
+        <form id="subject-form" data-api="/api/subjects" class="row g-2">
+            <div class="col-md-5">
+                <label class="form-label" for="subject-name">Назва дисципліни</label>
+                <input class="form-control" id="subject-name" name="name" maxlength="100" required>
+            </div>
+            <div class="col-md-4">
+                <label class="form-label" for="subject-teacher">Викладач</label>
+                <select class="form-select" id="subject-teacher" name="teacher_id" data-number required>
+                    <option value="">Оберіть викладача</option>
+                    {% for item in teachers %}<option value="{{ item.id }}">{{ item.full_name }}</option>{% endfor %}
+                </select>
+            </div>
+            {{ form_buttons() }}
+        </form>
+    </div>
+</section>
+<div class="table-responsive mb-4">
+    <table class="table table-bordered table-hover bg-white align-middle">
+        <thead class="table-light"><tr><th>№</th><th>Дисципліна</th><th>Викладач</th><th>Дії</th></tr></thead>
+        <tbody>
+        {% for item in subjects %}
+            <tr><td>{{ loop.index }}</td><td>{{ item.name }}</td><td>{{ item.teacher_name }}</td><td>{{ actions('subject-form', item, '/api/subjects') }}</td></tr>
+        {% else %}{{ empty_row(4) }}{% endfor %}
+        </tbody>
+    </table>
+</div>
+<section class="card mb-4">
+    <div class="card-body">
+        <h2 class="h5 mb-3">Призначення дисциплін групам</h2>
+        <form id="assignment-form" class="row g-2 mb-3">
+            <div class="col-md-4">
+                <label for="assignment-group" class="form-label">Академічна група</label>
+                <select id="assignment-group" name="group_id" class="form-select" required>
+                    <option value="">Оберіть групу</option>
+                    {% for item in groups %}<option value="{{ item.id }}">{{ item.name }} ({{ item.specialty_name }})</option>{% endfor %}
+                </select>
+            </div>
+            <div class="col-md-5">
+                <label for="assignment-subject" class="form-label">Дисципліна</label>
+                <select id="assignment-subject" name="subject_id" class="form-select" required>
+                    <option value="">Оберіть дисципліну</option>
+                    {% for item in subjects %}<option value="{{ item.id }}">{{ item.name }} ({{ item.teacher_name }})</option>{% endfor %}
+                </select>
+            </div>
+            <div class="col-auto align-self-end"><button class="btn btn-primary" type="submit">Призначити</button></div>
+        </form>
+        <div class="table-responsive">
+            <table class="table table-bordered table-hover align-middle mb-0">
+                <thead class="table-light"><tr><th>Група</th><th>Дисципліна</th><th>Дія</th></tr></thead>
+                <tbody>
+                {% for group in groups %}
+                    {% for subject in subjects if subject.id in group.subject_ids %}
+                        <tr><td>{{ group.name }} ({{ group.specialty_name }})</td><td>{{ subject.name }}</td>
+                            <td><button type="button" class="btn btn-sm btn-outline-danger" data-delete="/api/groups/{{ group.id }}/subjects/{{ subject.id }}">Вилучити</button></td></tr>
+                    {% endfor %}
+                {% endfor %}
+                {% if not groups or not subjects or not (groups | selectattr('subject_ids') | list) %}{{ empty_row(3) }}{% endif %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>
+{% endblock %}

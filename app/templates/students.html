@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+{% from '_crud.html' import form_buttons, actions, empty_row %}
+{% block title %}Студенти | Система обліку студентів{% endblock %}
+{% block content %}
+<h1 class="h3 mb-4">Студенти</h1>
+<section class="card mb-3">
+    <div class="card-body">
+        <form id="student-form" data-api="/api/students" class="row g-2">
+            <div class="col-md-5">
+                <label class="form-label" for="student-name">ПІБ студента</label>
+                <input class="form-control" id="student-name" name="full_name" maxlength="150" required>
+            </div>
+            <div class="col-md-4">
+                <label class="form-label" for="student-group">Академічна група</label>
+                <select class="form-select" id="student-group" name="group_id" data-number required>
+                    <option value="">Оберіть групу</option>
+                    {% for item in groups %}<option value="{{ item.id }}">{{ item.name }} ({{ item.specialty_name }})</option>{% endfor %}
+                </select>
+            </div>
+            {{ form_buttons() }}
+        </form>
+    </div>
+</section>
+<div class="row g-2 mb-3">
+    <div class="col-md-5">
+        <label for="student-search" class="form-label">Пошук за ПІБ</label>
+        <input class="form-control" id="student-search" type="search" placeholder="Введіть ПІБ...">
+    </div>
+    <div class="col-md-4">
+        <label for="group-filter" class="form-label">Фільтр за групою</label>
+        <select id="group-filter" class="form-select">
+            <option value="">Усі групи</option>
+            {% for item in groups %}<option value="{{ item.id }}">{{ item.name }} ({{ item.specialty_name }})</option>{% endfor %}
+        </select>
+    </div>
+</div>
+<div class="table-responsive">
+    <table class="table table-bordered table-hover bg-white align-middle" id="students-table">
+        <thead class="table-light"><tr><th>№</th><th>ПІБ</th><th>Група</th><th>Курс</th><th>Спеціальність</th><th>Інститут</th><th>Дії</th></tr></thead>
+        <tbody>
+        {% for item in students %}
+            <tr data-student-name="{{ item.full_name }}" data-group-id="{{ item.group_id }}">
+                <td>{{ loop.index }}</td><td>{{ item.full_name }}</td><td>{{ item.group_name }}</td><td>{{ item.course }}</td><td>{{ item.specialty_name }}</td><td>{{ item.institute_name }}</td><td>{{ actions('student-form', item, '/api/students') }}</td>
+            </tr>
+        {% else %}{{ empty_row(7) }}{% endfor %}
+        </tbody>
+    </table>
+</div>
+<p class="text-secondary">Усього студентів: {{ students | length }}</p>
+<p id="student-no-results" class="text-secondary d-none">За заданими параметрами студентів не знайдено.</p>
+{% endblock %}

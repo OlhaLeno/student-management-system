@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+{% from '_crud.html' import empty_row %}
+{% macro average(value) %}{{ '%.2f' | format(value) if value is not none else '—' }}{% endmacro %}
+{% block title %}Звіти | Система обліку студентів{% endblock %}
+{% block content %}
+<h1 class="h3 mb-4">Звіти</h1>
+<section class="card mb-4"><div class="card-body">
+    <h2 class="h5 mb-3">Фільтри звітів</h2>
+    <form method="get" class="row g-2">
+        <div class="col-md-3"><label class="form-label" for="report-group">Група</label>
+            <select class="form-select" id="report-group" name="group_id"><option value="">Усі групи</option>
+            {% for g in groups %}<option value="{{ g.id }}" {% if filters.group_id == g.id %}selected{% endif %}>{{ g.name }} ({{ g.specialty_name }})</option>{% endfor %}</select></div>
+        <div class="col-md-2"><label class="form-label" for="report-course">Курс</label>
+            <select class="form-select" id="report-course" name="course"><option value="">Усі курси</option>
+            {% for c in courses %}<option value="{{ c }}" {% if filters.course == c %}selected{% endif %}>{{ c }}</option>{% endfor %}</select></div>
+        <div class="col-md-3"><label class="form-label" for="report-teacher">Викладач</label>
+            <select class="form-select" id="report-teacher" name="teacher_id"><option value="">Усі викладачі</option>
+            {% for t in teachers %}<option value="{{ t.id }}" {% if filters.teacher_id == t.id %}selected{% endif %}>{{ t.full_name }}</option>{% endfor %}</select></div>
+        <div class="col-md-4"><label class="form-label" for="report-student">Студент</label>
+            <select class="form-select" id="report-student" name="student_id"><option value="">Усі студенти</option>
+            {% for s in students %}<option value="{{ s.id }}" {% if filters.student_id == s.id %}selected{% endif %}>{{ s.full_name }} ({{ s.group_name }})</option>{% endfor %}</select></div>
+        <div class="col-12"><button class="btn btn-primary">Сформувати</button>
+            <a href="{{ url_for('web.reports') }}" class="btn btn-outline-secondary">Скинути</a></div>
+    </form>
+    <p class="small text-secondary mt-3 mb-0">Група та курс застосовуються до звітів про успішність і борги, викладач — до статистики викладачів, студент — до звіту про борги.</p>
+</div></section>
+<section class="card mb-4"><div class="card-body">
+    <h2 class="h5 mb-3">1. Успішність за групами та курсами</h2>
+    <h3 class="h6">За групами</h3>
+    <div class="table-responsive"><table class="table table-bordered table-hover align-middle">
+        <thead class="table-light"><tr><th>Група</th><th>Курс</th><th>Середній бал</th><th>Кількість боргів</th></tr></thead>
+        <tbody>{% for g in group_report.groups %}<tr><td>{{ g.group_name }}</td><td>{{ g.course }}</td><td>{{ average(g.average) }}</td><td>{{ g.debt_count }}</td></tr>
+        {% else %}{{ empty_row(4) }}{% endfor %}</tbody>
+    </table></div>
+    <h3 class="h6 mt-3">За курсами</h3>
+    <div class="table-responsive"><table class="table table-bordered table-hover align-middle mb-0">
+        <thead class="table-light"><tr><th>Курс</th><th>Середній бал</th><th>Кількість боргів</th></tr></thead>
+        <tbody>{% for c in group_report.courses %}<tr><td>{{ c.course }}</td><td>{{ average(c.average) }}</td><td>{{ c.debt_count }}</td></tr>
+        {% else %}{{ empty_row(3) }}{% endfor %}</tbody>
+    </table></div>
+</div></section>
+<section class="card mb-4"><div class="card-body">
+    <h2 class="h5 mb-3">2. Статистика за викладачами</h2>
+    <div class="table-responsive"><table class="table table-bordered table-hover align-middle mb-0">
+        <thead class="table-light"><tr><th>Викладач</th><th>Середній бал</th><th>Кількість результатів</th></tr></thead>
+        <tbody>{% for t in teacher_report.teachers %}<tr><td>{{ t.teacher_name }}</td><td>{{ average(t.average) }}</td><td>{{ t.grade_count }}</td></tr>
+        {% else %}{{ empty_row(3) }}{% endfor %}</tbody>
+    </table></div>
+</div></section>
+<section class="card mb-4"><div class="card-body">
+    <h2 class="h5 mb-3">3. Академічна заборгованість</h2>
+    <p>Загальна кількість боргів: <strong>{{ debt_report.debt_count }}</strong></p>
+    <div class="table-responsive"><table class="table table-bordered table-hover align-middle mb-0">
+        <thead class="table-light"><tr><th>Студент</th><th>Група</th><th>Курс</th><th>Дисципліна</th><th>Викладач</th><th>Вид контролю</th><th>Результат</th></tr></thead>
+        <tbody>{% for d in debt_report.debts %}<tr><td>{{ d.student_name }}</td><td>{{ d.group_name }}</td><td>{{ d.course }}</td><td>{{ d.subject_name }}</td><td>{{ d.teacher_name }}</td><td>{{ 'Іспит' if d.kind == 'exam' else 'Залік' }}</td><td class="text-danger">{{ d.result }}</td></tr>
+        {% else %}<tr><td colspan="7" class="text-center text-secondary">Академічних боргів не знайдено.</td></tr>{% endfor %}</tbody>
+    </table></div>
+</div></section>
+{% endblock %}

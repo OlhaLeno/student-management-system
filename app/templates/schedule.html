@@ -1,0 +1,79 @@
+{% extends 'base.html' %}
+{% from '_crud.html' import form_buttons, actions, empty_row %}
+{% block title %}Розклад | Система обліку студентів{% endblock %}
+{% block content %}
+<h1 class="h3 mb-4">Розклад занять</h1>
+<section class="card mb-3"><div class="card-body">
+    <h2 class="h5 mb-3">Додавання та редагування занять</h2>
+    <form id="schedule-form" data-api="/api/schedule" class="row g-2">
+        <div class="col-md-4">
+            <label class="form-label" for="schedule-group">Академічна група</label>
+            <select class="form-select" id="schedule-group" name="group_id" data-number required>
+                <option value="">Оберіть групу</option>
+                {% for g in groups %}<option value="{{ g.id }}">{{ g.name }} ({{ g.specialty_name }})</option>{% endfor %}
+            </select>
+        </div>
+        <div class="col-md-5">
+            <label class="form-label" for="schedule-subject">Дисципліна</label>
+            <select class="form-select" id="schedule-subject" name="subject_id" data-number required>
+                <option value="">Оберіть дисципліну</option>
+                {% for s in subjects %}<option value="{{ s.id }}" data-groups="{{ s.group_ids | join(',') }}">{{ s.name }} ({{ s.teacher_name }})</option>{% endfor %}
+            </select>
+        </div>
+        <div class="col-md-3">
+            <label class="form-label" for="schedule-day">День тижня</label>
+            <select class="form-select" id="schedule-day" name="day" data-number required>
+                <option value="">Оберіть день</option>
+                {% for n, name in days.items() %}<option value="{{ n }}">{{ name }}</option>{% endfor %}
+            </select>
+        </div>
+        <div class="col-md-6">
+            <label for="schedule-slot" class="form-label">Час заняття (пара)</label>
+            <select id="schedule-slot" class="form-select" required>
+                <option value="">Оберіть час заняття</option>
+                <option value="08:30|09:50">1 пара — 08:30–09:50</option>
+                <option value="10:05|11:25">2 пара — 10:05–11:25</option>
+                <option value="11:40|13:00">3 пара — 11:40–13:00</option>
+                <option value="13:15|14:35">4 пара — 13:15–14:35</option>
+                <option value="14:50|16:10">5 пара — 14:50–16:10</option>
+                <option value="16:25|17:45">6 пара — 16:25–17:45</option>
+                <option value="18:00|19:20">7 пара — 18:00–19:20</option>
+                <option value="19:30|20:50">8 пара — 19:30–20:50</option>
+            </select>
+            <input type="hidden" name="start_time" id="schedule-start">
+            <input type="hidden" name="end_time" id="schedule-end">
+        </div>
+        <div class="col-md-3"><label for="schedule-room" class="form-label">Аудиторія</label>
+            <input class="form-control" id="schedule-room" name="classroom" maxlength="50" required></div>
+        {{ form_buttons() }}
+    </form>
+    <p class="small text-secondary mt-2 mb-0">Час пар відповідає наданому розкладу. Раніше створені заняття з іншим часом зберігаються, але під час редагування потрібно обрати пару.</p>
+</div></section>
+<form method="get" class="row g-2 mb-3">
+    <div class="col-md-4"><label class="form-label" for="filter-schedule-group">Група</label>
+        <select class="form-select" id="filter-schedule-group" name="group_id">
+            <option value="">Усі групи</option>
+            {% for g in groups %}<option value="{{ g.id }}" {% if group_id == g.id %}selected{% endif %}>{{ g.name }} ({{ g.specialty_name }})</option>{% endfor %}
+        </select></div>
+    <div class="col-md-3"><label class="form-label" for="filter-schedule-day">День</label>
+        <select class="form-select" id="filter-schedule-day" name="day"><option value="">Усі дні</option>
+            {% for n, name in days.items() %}<option value="{{ n }}" {% if day == n %}selected{% endif %}>{{ name }}</option>{% endfor %}
+        </select></div>
+    <div class="col-md-3"><label class="form-label" for="filter-schedule-teacher">Викладач</label>
+        <select class="form-select" id="filter-schedule-teacher" name="teacher_id"><option value="">Усі викладачі</option>
+            {% for t in teachers %}<option value="{{ t.id }}" {% if teacher_id == t.id %}selected{% endif %}>{{ t.full_name }}</option>{% endfor %}
+        </select></div>
+    <div class="col-auto align-self-end"><button class="btn btn-primary">Показати</button>
+        <a href="{{ url_for('web.schedule') }}" class="btn btn-outline-secondary">Скинути</a></div>
+</form>
+<div class="table-responsive">
+    <table class="table table-bordered table-hover bg-white align-middle">
+        <thead class="table-light"><tr><th>День</th><th>Час</th><th>Група</th><th>Дисципліна</th><th>Викладач</th><th>Аудиторія</th><th>Дії</th></tr></thead>
+        <tbody>
+        {% for e in entries %}
+            <tr><td>{{ e.day_name }}</td><td class="text-nowrap">{{ e.start_time[:5] }}–{{ e.end_time[:5] }}</td><td>{{ e.group_name }}</td><td>{{ e.subject_name }}</td><td>{{ e.teacher_name }}</td><td>{{ e.classroom }}</td><td>{{ actions('schedule-form', e, '/api/schedule') }}</td></tr>
+        {% else %}{{ empty_row(7) }}{% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

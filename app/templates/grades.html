@@ -1,0 +1,94 @@
+{% extends 'base.html' %}
+{% from '_crud.html' import empty_row %}
+{% block title %}Успішність | Система обліку студентів{% endblock %}
+{% block content %}
+<h1 class="h3 mb-4">Успішність студентів</h1>
+<section class="card mb-4"><div class="card-body">
+    <h2 class="h5 mb-3">Внесення результату</h2>
+    <form id="grade-form" class="row g-2">
+        <div class="col-md-4"><label for="grade-student" class="form-label">Студент</label>
+            <select id="grade-student" name="student_id" class="form-select" required>
+                <option value="">Оберіть студента</option>
+                {% for s in students %}<option value="{{ s.id }}" data-group="{{ s.group_id }}" {% if selected and selected.id == s.id %}selected{% endif %}>{{ s.full_name }} ({{ s.group_name }})</option>{% endfor %}
+            </select></div>
+        <div class="col-md-4"><label for="grade-subject" class="form-label">Дисципліна</label>
+            <select id="grade-subject" name="subject_id" class="form-select" required>
+                <option value="">Оберіть дисципліну</option>
+                {% for s in subjects %}<option value="{{ s.id }}" data-groups="{{ s.group_ids | join(',') }}">{{ s.name }}</option>{% endfor %}
+            </select></div>
+        <div class="col-md-4"><label for="grade-kind" class="form-label">Вид контролю</label>
+            <select id="grade-kind" name="kind" class="form-select"><option value="exam">Іспит</option><option value="credit">Залік</option></select></div>
+        <div id="exam-field" class="col-md-3"><label for="grade-score" class="form-label">Оцінка (0–100)</label>
+            <input id="grade-score" name="score" class="form-control" type="number" min="0" max="100" required></div>
+        <div id="credit-field" class="col-md-3 d-none"><label for="grade-passed" class="form-label">Результат заліку</label>
+            <select id="grade-passed" name="passed" class="form-select" disabled><option value="true">Зараховано</option><option value="false">Не зараховано</option></select></div>
+        <div class="col-auto align-self-end"><button class="btn btn-primary" type="submit">Додати</button></div>
+    </form>
+    <p class="small text-secondary mb-0 mt-3">Оберіть студента та дисципліну його групи. З однієї дисципліни можна внести один підсумковий результат.</p>
+</div></section>
+<form method="get" class="row g-2 mb-3">
+    <div class="col-md-6"><label class="form-label" for="filter-grade-student">Перегляд успішності студента</label>
+        <select name="student_id" id="filter-grade-student" class="form-select">
+            <option value="">Усі студенти</option>
+            {% for s in students %}<option value="{{ s.id }}" {% if selected and selected.id == s.id %}selected{% endif %}>{{ s.full_name }} ({{ s.group_name }})</option>{% endfor %}
+        </select></div>
+    <div class="col-auto align-self-end"><button class="btn btn-primary">Показати</button>
+        <a href="{{ url_for('web.grades') }}" class="btn btn-outline-secondary">Скинути</a></div>
+</form>
+{% if summary is not none %}
+<section class="card mb-3"><div class="card-body">
+    <h2 class="h5">{{ selected.full_name }}</h2>
+    <div class="row g-2">
+        <div class="col-md-4">Середній бал: <strong>{{ '%.2f' | format(summary.average) if summary.average is not none else '—' }}</strong></div>
+        <div class="col-md-4">Кількість результатів: <strong>{{ summary.grade_count }}</strong></div>
+        <div class="col-md-4">Академічні борги: <strong>{{ summary.debt_count }}</strong></div>
+    </div>
+</div></section>
+{% endif %}
+<section id="grade-edit-panel" class="card mb-4 d-none">
+    <div class="card-body">
+        <h2 class="h5 mb-2">Редагування результату</h2>
+        <p id="grade-edit-description" class="text-secondary small"></p>
+        <form id="grade-edit-form" class="row g-2">
+            <div class="col-md-3">
+                <label for="grade-edit-kind" class="form-label">Вид контролю</label>
+                <select id="grade-edit-kind" class="form-select" required>
+                    <option value="exam">Іспит</option>
+                    <option value="credit">Залік</option>
+                </select>
+            </div>
+            <div id="grade-edit-exam-field" class="col-md-3">
+                <label for="grade-edit-score" class="form-label">Оцінка (0–100)</label>
+                <input id="grade-edit-score" class="form-control" type="number" min="0" max="100" step="1">
+            </div>
+            <div id="grade-edit-credit-field" class="col-md-3 d-none">
+                <label for="grade-edit-passed" class="form-label">Результат заліку</label>
+                <select id="grade-edit-passed" class="form-select">
+                    <option value="true">Зараховано</option>
+                    <option value="false">Не зараховано</option>
+                </select>
+            </div>
+            <div class="col-auto align-self-end">
+                <button type="submit" class="btn btn-primary">Зберегти</button>
+                <button type="button" id="grade-edit-cancel" class="btn btn-outline-secondary">Скасувати</button>
+            </div>
+        </form>
+    </div>
+</section>
+<div class="table-responsive">
+    <table class="table table-bordered table-hover bg-white align-middle">
+        <thead class="table-light"><tr><th>№</th><th>Студент</th><th>Дисципліна</th><th>Вид контролю</th><th>Результат</th><th>Заборгованість</th><th>Дії</th></tr></thead>
+        <tbody>
+        {% for g in grades %}<tr><td>{{ loop.index }}</td><td>{{ g.student_name }}</td><td>{{ g.subject_name }}</td><td>{{ g.kind_name }}</td><td>{{ g.result }}</td><td class="{{ 'text-danger' if g.has_debt else 'text-success' }}">{{ g.debt_status }}</td><td>
+            <button type="button" class="btn btn-sm btn-outline-primary" data-grade-edit
+                    data-grade-id="{{ g.id }}" data-grade-kind="{{ g.kind }}"
+                    data-grade-student="{{ g.student_name }}" data-grade-subject="{{ g.subject_name }}"
+                    data-grade-score="{{ g.get('score', '') }}"
+                    data-grade-passed="{{ 'true' if g.get('passed') else 'false' }}">Редагувати</button>
+        </td></tr>
+        {% else %}{{ empty_row(7) }}{% endfor %}
+        </tbody>
+    </table>
+</div>
+<p class="small text-secondary">Академічна заборгованість: оцінка від 0 до 50 включно або незарахований залік. Середній бал обчислюється за іспитами.</p>
+{% endblock %}
