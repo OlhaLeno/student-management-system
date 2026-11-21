@@ -250,10 +250,13 @@ class AcademicGroupService:
     def delete(self, group_id: int) -> None:
         group = self.get_by_id(group_id)
 
-        if group.students:
-            raise ValueError(
-                "Неможливо видалити групу, у якій є студенти."
-            )
+        for student in list(group.students):
+            for grade in list(student.grades):
+                db.session.delete(grade)
+            db.session.delete(student)
+
+        group.schedule_entries.clear()
+        group.subjects.clear()
 
         db.session.delete(group)
         commit()

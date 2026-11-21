@@ -80,7 +80,20 @@
                 <thead class="table-light"><tr><th>№</th><th>Група</th><th>Курс</th><th>Спеціальність</th><th>Інститут</th><th>Дії</th></tr></thead>
                 <tbody>
                 {% for item in groups %}
-                    <tr><td>{{ loop.index }}</td><td>{{ item.name }}</td><td>{{ item.course }}</td><td>{{ item.specialty_name }}</td><td>{{ item.institute_name }}</td><td>{{ actions('group-form', item, '/api/groups') }}</td></tr>
+                    <tr>
+                        <td>{{ loop.index }}</td>
+                        <td>{{ item.name }}</td>
+                        <td>{{ item.course }}</td>
+                        <td>{{ item.specialty_name }}</td>
+                        <td>{{ item.institute_name }}</td>
+                        <td>
+                            <button class="btn btn-sm btn-outline-primary" type="button"
+                                    data-edit="group-form" data-record='{{ item | tojson }}'>Редагувати</button>
+                            <button class="btn btn-sm btn-outline-danger" type="button"
+                                    data-delete-group="/api/groups/{{ item.id }}"
+                                    data-group-name="{{ item.name }}">Видалити</button>
+                        </td>
+                    </tr>
                 {% else %}{{ empty_row(6) }}{% endfor %}
                 </tbody>
             </table>
