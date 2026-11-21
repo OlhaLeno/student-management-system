@@ -40,7 +40,7 @@
         <tbody>
         {% for item in students %}
             <tr data-student-name="{{ item.full_name }}" data-group-id="{{ item.group_id }}">
-                <td>{{ loop.index }}</td><td>{{ item.full_name }}</td><td>{{ item.group_name }}</td><td>{{ item.course }}</td><td>{{ item.specialty_name }}</td><td>{{ item.institute_name }}</td><td>{{ actions('student-form', item, '/api/students') }}</td>
+                <td>{{ loop.index }}</td><td>{{ item.full_name }}</td><td>{{ item.group_name }}</td><td>{{ item.course }}</td><td>{{ item.specialty_name }}</td><td>{{ item.institute_name }}</td><td>{{ actions('student-form', item, '/api/students', 'Видалити студента «' ~ item.full_name ~ '»? Усі його оцінки також будуть видалені.') }}</td>
             </tr>
         {% else %}{{ empty_row(7) }}{% endfor %}
         </tbody>

@@ -14,7 +14,8 @@ class Institute(db.Model):
     name = db.Column(db.String(100), nullable=False, unique=True)
 
     specialties = db.relationship(
-        "Specialty", back_populates="institute"
+        "Specialty", back_populates="institute",
+        cascade="all, delete-orphan"
     )
 
 
@@ -31,7 +32,8 @@ class Specialty(db.Model):
         "Institute", back_populates="specialties"
     )
     groups = db.relationship(
-        "AcademicGroup", back_populates="specialty"
+        "AcademicGroup", back_populates="specialty",
+        cascade="all, delete-orphan"
     )
 
 
@@ -49,7 +51,8 @@ class AcademicGroup(db.Model):
         "Specialty", back_populates="groups"
     )
     students = db.relationship(
-        "Student", back_populates="group"
+        "Student", back_populates="group",
+        cascade="all, delete-orphan"
     )
     subjects = db.relationship(
         "Subject", secondary=group_subject, back_populates="groups"
@@ -72,7 +75,8 @@ class Student(db.Model):
         "AcademicGroup", back_populates="students"
     )
     grades = db.relationship(
-        "Grade", back_populates="student"
+        "Grade", back_populates="student",
+        cascade="all, delete-orphan"
     )
 
 class Teacher(db.Model):
@@ -82,7 +86,8 @@ class Teacher(db.Model):
     full_name = db.Column(db.String(150), nullable=False)
 
     subjects = db.relationship(
-        "Subject", back_populates="teacher"
+        "Subject", back_populates="teacher",
+        cascade="all, delete-orphan"
     )
 
 class Subject(db.Model):
@@ -104,7 +109,8 @@ class Subject(db.Model):
         "ScheduleEntry", back_populates="subject", cascade="all, delete-orphan"
     )
     grades = db.relationship(
-        "Grade", back_populates="subject"
+        "Grade", back_populates="subject",
+        cascade="all, delete"
     )
 
 class ScheduleEntry(db.Model):

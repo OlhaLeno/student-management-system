@@ -26,7 +26,7 @@
         <thead class="table-light"><tr><th>№</th><th>Дисципліна</th><th>Викладач</th><th>Дії</th></tr></thead>
         <tbody>
         {% for item in subjects %}
-            <tr><td>{{ loop.index }}</td><td>{{ item.name }}</td><td>{{ item.teacher_name }}</td><td>{{ actions('subject-form', item, '/api/subjects') }}</td></tr>
+            <tr><td>{{ loop.index }}</td><td>{{ item.name }}</td><td>{{ item.teacher_name }}</td><td>{{ actions('subject-form', item, '/api/subjects', 'Видалити дисципліну «' ~ item.name ~ '»? Усі оцінки з неї, записи розкладу та призначення групам також будуть видалені.') }}</td></tr>
         {% else %}{{ empty_row(4) }}{% endfor %}
         </tbody>
     </table>
@@ -58,7 +58,9 @@
                 {% for group in groups %}
                     {% for subject in subjects if subject.id in group.subject_ids %}
                         <tr><td>{{ group.name }} ({{ group.specialty_name }})</td><td>{{ subject.name }}</td>
-                            <td><button type="button" class="btn btn-sm btn-outline-danger" data-delete="/api/groups/{{ group.id }}/subjects/{{ subject.id }}">Вилучити</button></td></tr>
+                            <td><button type="button" class="btn btn-sm btn-outline-danger"
+                            data-delete="/api/groups/{{ group.id }}/subjects/{{ subject.id }}"
+                            data-delete-confirm="Вилучити дисципліну «{{ subject.name }}» із групи «{{ group.name }}»? Оцінки студентів цієї групи з цієї дисципліни та відповідні заняття також будуть видалені.">Вилучити</button></td></tr>
                     {% endfor %}
                 {% endfor %}
                 {% if not groups or not subjects or not (groups | selectattr('subject_ids') | list) %}{{ empty_row(3) }}{% endif %}

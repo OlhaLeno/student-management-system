@@ -85,6 +85,9 @@
                     data-grade-student="{{ g.student_name }}" data-grade-subject="{{ g.subject_name }}"
                     data-grade-score="{{ g.get('score', '') }}"
                     data-grade-passed="{{ 'true' if g.get('passed') else 'false' }}">Редагувати</button>
+            <button type="button" class="btn btn-sm btn-outline-danger"
+                    data-delete="/api/grades/{{ g.id }}"
+                    data-delete-confirm="Видалити результат студента «{{ g.student_name }}» з дисципліни «{{ g.subject_name }}»?">Видалити</button>
         </td></tr>
         {% else %}{{ empty_row(7) }}{% endfor %}
         </tbody>

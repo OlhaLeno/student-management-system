@@ -5,11 +5,12 @@
     </div>
 {% endmacro %}
 
-{% macro actions(form_id, record, endpoint) %}
+{% macro actions(form_id, record, endpoint, delete_message='Видалити цей запис?') %}
     <button class="btn btn-sm btn-outline-primary" type="button"
             data-edit="{{ form_id }}" data-record='{{ record | tojson }}'>Редагувати</button>
     <button class="btn btn-sm btn-outline-danger" type="button"
-            data-delete="{{ endpoint }}/{{ record.id }}">Видалити</button>
+            data-delete="{{ endpoint }}/{{ record.id }}"
+            data-delete-confirm="{{ delete_message }}">Видалити</button>
 {% endmacro %}
 
 {% macro empty_row(columns) %}

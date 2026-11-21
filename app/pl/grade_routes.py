@@ -73,9 +73,14 @@ def student_performance(student_id):
     return data
 
 
-@grade_api.route("/grades/<int:grade_id>", methods=["GET", "PUT"])
+@grade_api.route("/grades/<int:grade_id>", methods=["GET", "PUT", "DELETE"])
 def grade_detail(grade_id):
     service = GradeService()
+
+    if request.method == "DELETE":
+        service.delete(grade_id)
+        return "", 204
+
     grade = service.get_by_id(grade_id)
 
     if request.method == "PUT":

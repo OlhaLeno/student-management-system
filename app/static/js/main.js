@@ -78,25 +78,11 @@ document.querySelectorAll('[data-edit]').forEach(button => {
     });
 });
 
-document.querySelectorAll('[data-delete-group]').forEach(button => {
-    button.addEventListener('click', () => {
-        const groupName = button.dataset.groupName;
-        const message =
-            `Видалити академічну групу «${groupName}»?\\n\\n` +
-            'Також буде видалено всіх студентів цієї групи, їхні оцінки, ' +
-            'розклад занять і призначення дисциплін. Інститут, спеціальність, ' +
-            'викладачі та самі дисципліни залишаться.\\n\\n' +
-            'Цю дію неможливо скасувати.';
-
-        if (window.confirm(message)) {
-            saveAndReload(button.dataset.deleteGroup, 'DELETE', undefined, button);
-        }
-    });
-});
-
 document.querySelectorAll('[data-delete]').forEach(button => {
     button.addEventListener('click', () => {
-        if (window.confirm('Ви впевнені, що хочете видалити цей запис або зв’язок?')) {
+        const message = button.dataset.deleteConfirm
+            || 'Ви впевнені, що хочете видалити цей запис?';
+        if (window.confirm(message)) {
             saveAndReload(button.dataset.delete, 'DELETE', undefined, button);
         }
     });

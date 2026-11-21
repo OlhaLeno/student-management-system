@@ -40,12 +40,6 @@ class TeacherService:
     def delete(self, teacher_id: int) -> None:
         teacher = self.get_by_id(teacher_id)
 
-        if teacher.subjects:
-            raise ValueError(
-                "Неможливо видалити викладача, "
-                "за яким закріплені дисципліни."
-            )
-
         db.session.delete(teacher)
         commit()
 
@@ -105,12 +99,6 @@ class SubjectService:
 
     def delete(self, subject_id: int) -> None:
         subject = self.get_by_id(subject_id)
-
-        if subject.grades or subject.schedule_entries:
-            raise ValueError(
-                "Неможливо видалити дисципліну, "
-                "яка має оцінки або записи розкладу."
-            )
 
         db.session.delete(subject)
         commit()

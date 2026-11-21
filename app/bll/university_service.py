@@ -1,6 +1,5 @@
-
 from app.dal.database import db
-from app.dal.models import Institute, Specialty, AcademicGroup, Subject, Student, Grade
+from app.dal.models import Institute, Specialty, AcademicGroup, Subject
 
 from app.bll.service_utils import validate_text, get_required, commit
 
@@ -40,12 +39,6 @@ class InstituteService:
 
     def delete(self, institute_id: int) -> None:
         institute = self.get_by_id(institute_id)
-
-        if institute.specialties:
-            raise ValueError(
-                "Неможливо видалити інститут, "
-                "до якого належать спеціальності."
-            )
 
         db.session.delete(institute)
         self._commit()
@@ -140,12 +133,6 @@ class SpecialtyService:
 
     def delete(self, specialty_id: int) -> None:
         specialty = self.get_by_id(specialty_id)
-
-        if specialty.groups:
-            raise ValueError(
-                "Неможливо видалити спеціальність, "
-                "до якої належать академічні групи."
-            )
 
         db.session.delete(specialty)
         self._commit()
@@ -250,14 +237,6 @@ class AcademicGroupService:
     def delete(self, group_id: int) -> None:
         group = self.get_by_id(group_id)
 
-        for student in list(group.students):
-            for grade in list(student.grades):
-                db.session.delete(grade)
-            db.session.delete(student)
-
-        group.schedule_entries.clear()
-        group.subjects.clear()
-
         db.session.delete(group)
         commit()
 
@@ -282,25 +261,14 @@ class AcademicGroupService:
         if subject not in group.subjects:
             raise ValueError("Група не вивчає цю дисципліну.")
 
-        if any(
-            entry.subject_id == subject_id
-            for entry in group.schedule_entries
-        ):
-            raise ValueError(
-                "Ця дисципліна присутня в розкладі групи."
-            )
+        for entry in list(group.schedule_entries):
+            if entry.subject_id == subject_id:
+                db.session.delete(entry)
 
-        existing_grade = db.session.query(Grade).join(
-            Student, Grade.student_id == Student.id
-        ).filter(
-            Student.group_id == group_id,
-            Grade.subject_id == subject_id
-        ).first()
-
-        if existing_grade is not None:
-            raise ValueError(
-                "З цієї дисципліни вже внесено оцінки."
-            )
+        for student in list(group.students):
+            for grade in list(student.grades):
+                if grade.subject_id == subject_id:
+                    db.session.delete(grade)
 
         group.subjects.remove(subject)
         commit()

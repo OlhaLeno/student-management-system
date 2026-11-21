@@ -19,7 +19,7 @@
         <thead class="table-light"><tr><th>№</th><th>ПІБ</th><th>Дії</th></tr></thead>
         <tbody>
         {% for item in teachers %}
-            <tr><td>{{ loop.index }}</td><td>{{ item.full_name }}</td><td>{{ actions('teacher-form', item, '/api/teachers') }}</td></tr>
+            <tr><td>{{ loop.index }}</td><td>{{ item.full_name }}</td><td>{{ actions('teacher-form', item, '/api/teachers', 'Видалити викладача «' ~ item.full_name ~ '»? Разом із ним будуть видалені його дисципліни, пов’язані оцінки, записи розкладу та призначення групам.') }}</td></tr>
         {% else %}{{ empty_row(3) }}{% endfor %}
         </tbody>
     </table>

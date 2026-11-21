@@ -53,6 +53,13 @@ class StudentService:
             "Академічну групу не знайдено."
         )
 
+        if student.group_id != group_id and student.grades:
+            raise ValueError(
+                "Неможливо перевести студента до іншої групи, "
+                "поки за ним закріплені оцінки. Спочатку видаліть або "
+                "перевірте наявні результати оцінювання."
+            )
+
         student.full_name = full_name
         student.group_id = group_id
 
@@ -62,11 +69,6 @@ class StudentService:
 
     def delete(self, student_id: int) -> None:
         student = self.get_by_id(student_id)
-
-        if student.grades:
-            raise ValueError(
-                "Неможливо видалити студента, який має оцінки."
-            )
 
         db.session.delete(student)
         commit()

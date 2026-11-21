@@ -29,6 +29,11 @@ class GradeService:
             raise ValueError("Некоректний ID оцінки.")
         return get_required(Grade, grade_id, "Результат оцінювання не знайдено.")
 
+    def delete(self, grade_id: int) -> None:
+        grade = self.get_by_id(grade_id)
+        db.session.delete(grade)
+        commit()
+
     def update_exam(self, grade_id: int, score: int) -> ExamGrade:
         grade = self.get_by_id(grade_id)
         if not isinstance(grade, ExamGrade):

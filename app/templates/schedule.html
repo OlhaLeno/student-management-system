@@ -71,7 +71,7 @@
         <thead class="table-light"><tr><th>День</th><th>Час</th><th>Група</th><th>Дисципліна</th><th>Викладач</th><th>Аудиторія</th><th>Дії</th></tr></thead>
         <tbody>
         {% for e in entries %}
-            <tr><td>{{ e.day_name }}</td><td class="text-nowrap">{{ e.start_time[:5] }}–{{ e.end_time[:5] }}</td><td>{{ e.group_name }}</td><td>{{ e.subject_name }}</td><td>{{ e.teacher_name }}</td><td>{{ e.classroom }}</td><td>{{ actions('schedule-form', e, '/api/schedule') }}</td></tr>
+            <tr><td>{{ e.day_name }}</td><td class="text-nowrap">{{ e.start_time[:5] }}–{{ e.end_time[:5] }}</td><td>{{ e.group_name }}</td><td>{{ e.subject_name }}</td><td>{{ e.teacher_name }}</td><td>{{ e.classroom }}</td><td>{{ actions('schedule-form', e, '/api/schedule', 'Видалити це заняття з розкладу?') }}</td></tr>
         {% else %}{{ empty_row(7) }}{% endfor %}
         </tbody>
     </table>
