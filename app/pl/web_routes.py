@@ -12,7 +12,7 @@ from app.bll.schedule_service import ScheduleService
 from app.bll.grade_service import GradeService
 from app.bll.performance_facade import PerformanceFacade
 from app.bll.report_service import ReportService
-from app.bll.report_strategies import GroupReport, TeacherReport, DebtReport
+from app.bll.report_strategies import GroupReport, TeacherReport, DebtReport, StudentReport
 from app.pl.schedule_routes import schedule_to_dict
 from app.pl.grade_routes import grade_to_dict
 
@@ -122,9 +122,14 @@ def reports():
     teacher_report = service.generate({'teacher_id': filters['teacher_id']}
                                       if filters['teacher_id'] is not None else {})
     service.set_strategy(DebtReport())
-    debt_report = service.generate({k: filters[k] for k in ('group_id', 'course', 'student_id')
+    debt_report = service.generate({k: filters[k] for k in
+                                    ('group_id', 'course', 'student_id', 'teacher_id')
                                     if filters[k] is not None})
+    student_report = None
+    if filters['student_id'] is not None:
+        service.set_strategy(StudentReport())
+        student_report = service.generate({'student_id': filters['student_id']})
     return render_template('reports.html', groups=groups, teachers=teachers,
                            students=students, courses=courses, filters=filters,
                            group_report=group_report, teacher_report=teacher_report,
-                           debt_report=debt_report)
+                           debt_report=debt_report, student_report=student_report)

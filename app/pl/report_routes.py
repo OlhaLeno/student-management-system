@@ -1,5 +1,5 @@
 from app.bll.report_service import ReportService
-from app.bll.report_strategies import GroupReport, TeacherReport, DebtReport
+from app.bll.report_strategies import GroupReport, TeacherReport, DebtReport, StudentReport
 from app.pl.api_utils import make_api, query_int
 
 
@@ -29,4 +29,11 @@ def teacher_report():
 
 @report_api.get("/reports/debts")
 def debt_report():
-    return generate_report(DebtReport(), ("group_id", "course", "student_id"))
+    return generate_report(DebtReport(), ("group_id", "course", "student_id", "teacher_id"))
+
+
+@report_api.get("/reports/students/<int:student_id>")
+def individual_student_report(student_id):
+    service = ReportService()
+    service.set_strategy(StudentReport())
+    return service.generate({"student_id": student_id})

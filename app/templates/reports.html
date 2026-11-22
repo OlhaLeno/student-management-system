@@ -22,10 +22,11 @@
         <div class="col-12"><button class="btn btn-primary">Сформувати</button>
             <a href="{{ url_for('web.reports') }}" class="btn btn-outline-secondary">Скинути</a></div>
     </form>
-    <p class="small text-secondary mt-3 mb-0">Група та курс застосовуються до звітів про успішність і борги, викладач — до статистики викладачів, студент — до звіту про борги.</p>
+    <p class="small text-secondary mt-3 mb-0">Група і курс — для загальної успішності та боргів. Викладач — для статистики викладачів і боргів. Студент — для персонального звіту та боргів. Після вибору натисніть «Сформувати».</p>
 </div></section>
 <section class="card mb-4"><div class="card-body">
-    <h2 class="h5 mb-3">1. Успішність за групами та курсами</h2>
+    <h2 class="h5 mb-2">1. Успішність за групами та курсами</h2>
+    <p class="small text-secondary">Враховуються фільтри «Група» та «Курс». Середній бал обчислюється лише за іспитами.</p>
     <h3 class="h6">За групами</h3>
     <div class="table-responsive"><table class="table table-bordered table-hover align-middle">
         <thead class="table-light"><tr><th>Група</th><th>Курс</th><th>Середній бал</th><th>Кількість боргів</th></tr></thead>
@@ -40,7 +41,8 @@
     </table></div>
 </div></section>
 <section class="card mb-4"><div class="card-body">
-    <h2 class="h5 mb-3">2. Статистика за викладачами</h2>
+    <h2 class="h5 mb-2">2. Статистика за викладачами</h2>
+    <p class="small text-secondary">Враховується фільтр «Викладач». Кількість результатів включає іспити та заліки.</p>
     <div class="table-responsive"><table class="table table-bordered table-hover align-middle mb-0">
         <thead class="table-light"><tr><th>Викладач</th><th>Середній бал</th><th>Кількість результатів</th></tr></thead>
         <tbody>{% for t in teacher_report.teachers %}<tr><td>{{ t.teacher_name }}</td><td>{{ average(t.average) }}</td><td>{{ t.grade_count }}</td></tr>
@@ -48,7 +50,35 @@
     </table></div>
 </div></section>
 <section class="card mb-4"><div class="card-body">
-    <h2 class="h5 mb-3">3. Академічна заборгованість</h2>
+    <h2 class="h5 mb-3">3. Успішність окремого студента</h2>
+    {% if student_report %}
+    <p class="mb-2"><strong>{{ student_report.student_name }}</strong> — {{ student_report.group_name }}, {{ student_report.course }} курс</p>
+    <div class="row g-2 mb-3">
+        <div class="col-md-3"><div class="border rounded p-2">Середній бал: <strong>{{ average(student_report.average) }}</strong></div></div>
+        <div class="col-md-3"><div class="border rounded p-2">Внесено результатів: <strong>{{ student_report.grade_count }}</strong></div></div>
+        <div class="col-md-3"><div class="border rounded p-2">Боргів: <strong>{{ student_report.debt_count }}</strong></div></div>
+        <div class="col-md-3"><div class="border rounded p-2">Без оцінки: <strong>{{ student_report.pending_count }}</strong></div></div>
+    </div>
+    <div class="table-responsive"><table class="table table-bordered table-hover align-middle mb-2">
+        <thead class="table-light"><tr><th>Дисципліна</th><th>Викладач</th><th>Вид контролю</th><th>Результат</th><th>Борг</th></tr></thead>
+        <tbody>{% for item in student_report.subjects %}
+        <tr><td>{{ item.subject_name }}</td><td>{{ item.teacher_name }}</td>
+            <td>{{ item.kind_name }}</td>
+            <td class="{% if item.has_debt == true %}text-danger{% endif %}">{{ item.result }}</td>
+            <td>{% if item.has_debt == none %}<span class="text-secondary">—</span>
+                {% elif item.has_debt %}<span class="text-danger">Є</span>
+                {% else %}<span class="text-success">Немає</span>{% endif %}</td>
+        </tr>
+        {% else %}{{ empty_row(5) }}{% endfor %}</tbody>
+    </table></div>
+    <p class="small text-secondary mb-0">Показані всі дисципліни, призначені групі студента, та раніше внесені результати. «Не внесено» не вважається боргом. Середній бал обчислюється лише за іспитами. Інші фільтри на цю таблицю не впливають.</p>
+    {% else %}
+    <p class="text-secondary mb-0">Оберіть студента у фільтрі вгорі та натисніть «Сформувати», щоб побачити всі його дисципліни, оцінки, заліки та борги.</p>
+    {% endif %}
+</div></section>
+<section class="card mb-4"><div class="card-body">
+    <h2 class="h5 mb-2">4. Академічна заборгованість</h2>
+    <p class="small text-secondary">Враховуються всі вибрані фільтри: група, курс, викладач та студент.</p>
     <p>Загальна кількість боргів: <strong>{{ debt_report.debt_count }}</strong></p>
     <div class="table-responsive"><table class="table table-bordered table-hover align-middle mb-0">
         <thead class="table-light"><tr><th>Студент</th><th>Група</th><th>Курс</th><th>Дисципліна</th><th>Викладач</th><th>Вид контролю</th><th>Результат</th></tr></thead>
