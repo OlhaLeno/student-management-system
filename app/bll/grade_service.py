@@ -91,6 +91,9 @@ class GradeService:
     def for_student(self, student_id: int) -> list[Grade]:
         return db.session.query(Grade).filter_by(student_id=student_id).all()
 
+    def for_subject(self, subject_id: int) -> list[Grade]:
+        return db.session.query(Grade).filter_by(subject_id=subject_id).all()
+
     def all_grades(self) -> list[Grade]:
         return db.session.query(Grade).all()
 

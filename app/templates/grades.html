@@ -3,13 +3,14 @@
 {% block title %}Успішність | Система обліку студентів{% endblock %}
 {% block content %}
 <h1 class="h3 mb-4">Успішність студентів</h1>
+
 <section class="card mb-4"><div class="card-body">
     <h2 class="h5 mb-3">Внесення результату</h2>
     <form id="grade-form" class="row g-2">
         <div class="col-md-4"><label for="grade-student" class="form-label">Студент</label>
             <select id="grade-student" name="student_id" class="form-select" required>
                 <option value="">Оберіть студента</option>
-                {% for s in students %}<option value="{{ s.id }}" data-group="{{ s.group_id }}" {% if selected and selected.id == s.id %}selected{% endif %}>{{ s.full_name }} ({{ s.group_name }})</option>{% endfor %}
+                {% for s in students %}<option value="{{ s.id }}" data-group="{{ s.group_id }}">{{ s.full_name }} ({{ s.group_name }})</option>{% endfor %}
             </select></div>
         <div class="col-md-4"><label for="grade-subject" class="form-label">Дисципліна</label>
             <select id="grade-subject" name="subject_id" class="form-select" required>
@@ -26,25 +27,7 @@
     </form>
     <p class="small text-secondary mb-0 mt-3">Оберіть студента та дисципліну його групи. З однієї дисципліни можна внести один підсумковий результат.</p>
 </div></section>
-<form method="get" class="row g-2 mb-3">
-    <div class="col-md-6"><label class="form-label" for="filter-grade-student">Перегляд успішності студента</label>
-        <select name="student_id" id="filter-grade-student" class="form-select">
-            <option value="">Усі студенти</option>
-            {% for s in students %}<option value="{{ s.id }}" {% if selected and selected.id == s.id %}selected{% endif %}>{{ s.full_name }} ({{ s.group_name }})</option>{% endfor %}
-        </select></div>
-    <div class="col-auto align-self-end"><button class="btn btn-primary">Показати</button>
-        <a href="{{ url_for('web.grades') }}" class="btn btn-outline-secondary">Скинути</a></div>
-</form>
-{% if summary is not none %}
-<section class="card mb-3"><div class="card-body">
-    <h2 class="h5">{{ selected.full_name }}</h2>
-    <div class="row g-2">
-        <div class="col-md-4">Середній бал: <strong>{{ '%.2f' | format(summary.average) if summary.average is not none else '—' }}</strong></div>
-        <div class="col-md-4">Кількість результатів: <strong>{{ summary.grade_count }}</strong></div>
-        <div class="col-md-4">Академічні борги: <strong>{{ summary.debt_count }}</strong></div>
-    </div>
-</div></section>
-{% endif %}
+
 <section id="grade-edit-panel" class="card mb-4 d-none">
     <div class="card-body">
         <h2 class="h5 mb-2">Редагування результату</h2>
@@ -75,23 +58,117 @@
         </form>
     </div>
 </section>
-<div class="table-responsive">
-    <table class="table table-bordered table-hover bg-white align-middle">
-        <thead class="table-light"><tr><th>№</th><th>Студент</th><th>Дисципліна</th><th>Вид контролю</th><th>Результат</th><th>Заборгованість</th><th>Дії</th></tr></thead>
-        <tbody>
-        {% for g in grades %}<tr><td>{{ loop.index }}</td><td>{{ g.student_name }}</td><td>{{ g.subject_name }}</td><td>{{ g.kind_name }}</td><td>{{ g.result }}</td><td class="{{ 'text-danger' if g.has_debt else 'text-success' }}">{{ g.debt_status }}</td><td>
-            <button type="button" class="btn btn-sm btn-outline-primary" data-grade-edit
-                    data-grade-id="{{ g.id }}" data-grade-kind="{{ g.kind }}"
-                    data-grade-student="{{ g.student_name }}" data-grade-subject="{{ g.subject_name }}"
-                    data-grade-score="{{ g.get('score', '') }}"
-                    data-grade-passed="{{ 'true' if g.get('passed') else 'false' }}">Редагувати</button>
-            <button type="button" class="btn btn-sm btn-outline-danger"
-                    data-delete="/api/grades/{{ g.id }}"
-                    data-delete-confirm="Видалити результат студента «{{ g.student_name }}» з дисципліни «{{ g.subject_name }}»?">Видалити</button>
-        </td></tr>
-        {% else %}{{ empty_row(7) }}{% endfor %}
-        </tbody>
-    </table>
-</div>
-<p class="small text-secondary">Академічна заборгованість: оцінка від 0 до 50 включно або незарахований залік. Середній бал обчислюється за іспитами.</p>
+
+<section class="card mb-4"><div class="card-body">
+    <h2 class="h5 mb-3">Перегляд успішності за студентом</h2>
+    <form method="get" action="{{ url_for('web.grades') }}" class="row g-2 align-items-end mb-3">
+        {% if selected_subject %}<input type="hidden" name="subject_id" value="{{ selected_subject.id }}">{% endif %}
+        {% if selected_group %}<input type="hidden" name="group_id" value="{{ selected_group.id }}">{% endif %}
+        <div class="col-md-6">
+            <label class="form-label" for="filter-grade-student">Студент</label>
+            <select name="student_id" id="filter-grade-student" class="form-select">
+                <option value="">Оберіть студента</option>
+                {% for s in students %}<option value="{{ s.id }}" {% if selected_student and selected_student.id == s.id %}selected{% endif %}>{{ s.full_name }} ({{ s.group_name }})</option>{% endfor %}
+            </select>
+        </div>
+        <div class="col-auto"><button class="btn btn-primary">Показати</button>
+            <a href="{{ url_for('web.grades', subject_id=selected_subject.id if selected_subject else none, group_id=selected_group.id if selected_group else none) }}" class="btn btn-outline-secondary">Скинути</a></div>
+    </form>
+
+    {% if selected_student %}
+        <div class="border rounded p-3 mb-3">
+            <h3 class="h6 mb-3">{{ selected_student.full_name }} — група {{ selected_student.group_name }}</h3>
+            <div class="row g-2">
+                <div class="col-md-4">Середній бал за іспитами: <strong>{{ '%.2f' | format(student_summary.average) if student_summary.average is not none else '—' }}</strong></div>
+                <div class="col-md-4">Внесено результатів: <strong>{{ student_summary.grade_count }}</strong></div>
+                <div class="col-md-4">Академічні борги: <strong>{{ student_summary.debt_count }}</strong></div>
+            </div>
+        </div>
+        <div class="table-responsive">
+            <table class="table table-bordered table-hover bg-white align-middle">
+                <thead class="table-light"><tr><th>№</th><th>Дисципліна</th><th>Вид контролю</th><th>Результат</th><th>Заборгованість</th><th>Дії</th></tr></thead>
+                <tbody>
+                {% for g in student_grades %}<tr>
+                    <td>{{ loop.index }}</td><td>{{ g.subject_name }}</td><td>{{ g.kind_name }}</td><td>{{ g.result }}</td>
+                    <td class="{{ 'text-danger' if g.has_debt else 'text-success' }}">{{ g.debt_status }}</td>
+                    <td>
+                        {% if g.id %}
+                        <button type="button" class="btn btn-sm btn-outline-primary" data-grade-edit
+                                data-grade-id="{{ g.id }}" data-grade-kind="{{ g.kind }}"
+                                data-grade-student="{{ selected_student.full_name }}" data-grade-subject="{{ g.subject_name }}"
+                                data-grade-score="{{ g.get('score', '') }}"
+                                data-grade-passed="{{ 'true' if g.get('passed') else 'false' }}">Редагувати</button>
+                        <button type="button" class="btn btn-sm btn-outline-danger"
+                                data-delete="/api/grades/{{ g.id }}"
+                                data-delete-confirm="Видалити результат студента «{{ selected_student.full_name }}» з дисципліни «{{ g.subject_name }}»?">Видалити</button>
+                        {% else %}<span class="text-secondary">—</span>{% endif %}
+                    </td>
+                </tr>{% else %}{{ empty_row(6) }}{% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% else %}
+        <p class="text-secondary mb-0">Оберіть студента, щоб переглянути його результати з усіх дисциплін академічної групи.</p>
+    {% endif %}
+    <p class="small text-secondary mb-0">Якщо результат з дисципліни не внесено, вона відображається як «Не складено» та враховується як академічний борг.</p>
+</div></section>
+
+<section class="card mb-4"><div class="card-body">
+    <h2 class="h5 mb-3">Перегляд успішності за дисципліною</h2>
+    <form id="subject-performance-form" method="get" action="{{ url_for('web.grades') }}" class="row g-2 align-items-end mb-3">
+        {% if selected_student %}<input type="hidden" name="student_id" value="{{ selected_student.id }}">{% endif %}
+        <div class="col-md-5">
+            <label class="form-label" for="filter-grade-subject">Дисципліна</label>
+            <select name="subject_id" id="filter-grade-subject" class="form-select">
+                <option value="">Оберіть дисципліну</option>
+                {% for s in subjects %}<option value="{{ s.id }}" {% if selected_subject and selected_subject.id == s.id %}selected{% endif %}>{{ s.name }}</option>{% endfor %}
+            </select>
+        </div>
+        <div class="col-md-4">
+            <label class="form-label" for="filter-grade-group">Група (необов'язково)</label>
+            <select name="group_id" id="filter-grade-group" class="form-select">
+                <option value="">Усі групи</option>
+                {% for group in groups %}
+                <option value="{{ group.id }}" data-subjects="{{ group.subject_ids | join(',') }}" {% if selected_group and selected_group.id == group.id %}selected{% endif %}>{{ group.name }} ({{ group.course }} курс)</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="col-auto"><button class="btn btn-primary">Показати</button>
+            <a href="{{ url_for('web.grades', student_id=selected_student.id if selected_student else none) }}" class="btn btn-outline-secondary">Скинути</a></div>
+    </form>
+
+    {% if selected_subject %}
+        <div class="mb-3">
+            <h3 class="h6">{{ selected_subject.name }}{% if selected_group %} — група {{ selected_group.name }}{% endif %}</h3>
+            <p class="small text-secondary mb-0">Усього студентів: {{ subject_summary.student_count }} · Склали: {{ subject_summary.passed_count }} · Не склали: {{ subject_summary.debt_count }}</p>
+        </div>
+        <div class="table-responsive">
+            <table class="table table-bordered table-hover bg-white align-middle">
+                <thead class="table-light"><tr><th>№</th><th>Студент</th><th>Група</th><th>Курс</th><th>Вид контролю</th><th>Результат</th><th>Заборгованість</th><th>Дії</th></tr></thead>
+                <tbody>
+                {% for g in subject_students %}<tr>
+                    <td>{{ loop.index }}</td><td>{{ g.student_name }}</td><td>{{ g.group_name }}</td><td>{{ g.course }}</td>
+                    <td>{{ g.kind_name }}</td><td>{{ g.result }}</td>
+                    <td class="{{ 'text-danger' if g.has_debt else 'text-success' }}">{{ g.debt_status }}</td>
+                    <td>
+                        {% if g.id %}
+                        <button type="button" class="btn btn-sm btn-outline-primary" data-grade-edit
+                                data-grade-id="{{ g.id }}" data-grade-kind="{{ g.kind }}"
+                                data-grade-student="{{ g.student_name }}" data-grade-subject="{{ selected_subject.name }}"
+                                data-grade-score="{{ g.get('score', '') }}"
+                                data-grade-passed="{{ 'true' if g.get('passed') else 'false' }}">Редагувати</button>
+                        <button type="button" class="btn btn-sm btn-outline-danger"
+                                data-delete="/api/grades/{{ g.id }}"
+                                data-delete-confirm="Видалити результат студента «{{ g.student_name }}» з дисципліни «{{ selected_subject.name }}»?">Видалити</button>
+                        {% else %}<span class="text-secondary">—</span>{% endif %}
+                    </td>
+                </tr>{% else %}{{ empty_row(8) }}{% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% else %}
+        <p class="text-secondary mb-0">Оберіть дисципліну, щоб переглянути результати всіх студентів, які її вивчають.</p>
+    {% endif %}
+    <p class="small text-secondary mb-0">Група — необов'язковий фільтр. За замовчуванням відображаються студенти всіх груп, які вивчають обрану дисципліну. Якщо результат не внесено, студент відображається як такий, що не склав дисципліну, та має академічну заборгованість.</p>
+</div></section>
 {% endblock %}

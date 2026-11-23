@@ -194,6 +194,32 @@ if (gradeForm) {
     });
 }
 
+const subjectPerformanceForm = document.getElementById('subject-performance-form');
+if (subjectPerformanceForm) {
+    const subjectSelect = subjectPerformanceForm.elements.subject_id;
+    const groupSelect = subjectPerformanceForm.elements.group_id;
+
+    function updateSubjectPerformanceGroups(resetSelection = false) {
+        const subjectId = subjectSelect.value;
+        groupSelect.disabled = !subjectId;
+
+        for (const option of groupSelect.options) {
+            if (!option.value) continue;
+            const subjectIds = (option.dataset.subjects || '').split(',');
+            const available = Boolean(subjectId) && subjectIds.includes(subjectId);
+            option.hidden = !available;
+            option.disabled = !available;
+        }
+
+        if (resetSelection || groupSelect.selectedOptions[0]?.disabled) {
+            groupSelect.value = '';
+        }
+    }
+
+    subjectSelect.addEventListener('change', () => updateSubjectPerformanceGroups(true));
+    updateSubjectPerformanceGroups();
+}
+
 const gradeEditForm = document.getElementById('grade-edit-form');
 if (gradeEditForm) {
     const panel = document.getElementById('grade-edit-panel');

@@ -10,7 +10,6 @@ from app.pl.student_routes import student_to_dict
 from app.pl.teaching_routes import teacher_to_dict, subject_to_dict
 from app.bll.schedule_service import ScheduleService
 from app.bll.grade_service import GradeService
-from app.bll.performance_facade import PerformanceFacade
 from app.bll.report_service import ReportService
 from app.bll.report_strategies import GroupReport, TeacherReport, DebtReport, StudentReport
 from app.pl.schedule_routes import schedule_to_dict
@@ -90,20 +89,136 @@ def schedule():
 
 @web.get('/grades')
 def grades():
-    students = [student_to_dict(s) for s in StudentService().get_all()]
-    subjects = [subject_to_dict(s) for s in SubjectService().get_all()]
+    student_models = StudentService().get_all()
+    subject_models = SubjectService().get_all()
+    students = [student_to_dict(student) for student in student_models]
+    subjects = [subject_to_dict(subject) for subject in subject_models]
+
     student_id = request.args.get('student_id', type=int)
-    selected = next((s for s in students if s['id'] == student_id), None)
+    subject_id = request.args.get('subject_id', type=int)
+    requested_group_id = request.args.get('group_id', type=int)
+    groups = [group_to_dict(group) for group in AcademicGroupService().get_all()]
+
+    selected_student_model = next(
+        (student for student in student_models if student.id == student_id), None
+    )
+    selected_student = next(
+        (student for student in students if student['id'] == student_id), None
+    )
+    selected_subject_model = next(
+        (subject for subject in subject_models if subject.id == subject_id), None
+    )
+    selected_subject = next(
+        (subject for subject in subjects if subject['id'] == subject_id), None
+    )
+
     service = GradeService()
-    if selected:
-        records = service.for_student(student_id)
-        summary = PerformanceFacade().summary(student_id)
-    else:
-        records = service.all_grades()
-        summary = None
-    return render_template('grades.html', students=students, subjects=subjects,
-                           grades=[grade_to_dict(g) for g in records],
-                           selected=selected, summary=summary)
+    student_grades = []
+    student_summary = None
+    subject_students = []
+    subject_summary = None
+    selected_group = None
+
+    if selected_student_model is not None:
+        records = service.for_student(selected_student_model.id)
+        grades_by_subject = {grade.subject_id: grade for grade in records}
+        assigned_subjects = sorted(
+            selected_student_model.group.subjects,
+            key=lambda subject: subject.name.casefold()
+        )
+
+        for subject in assigned_subjects:
+            grade = grades_by_subject.get(subject.id)
+            if grade is not None:
+                row = grade_to_dict(grade)
+            else:
+                row = {
+                    'id': None,
+                    'kind': None,
+                    'kind_name': '—',
+                    'result': 'Не складено',
+                    'has_debt': True,
+                    'debt_status': 'Є',
+                }
+            row['subject_name'] = subject.name
+            student_grades.append(row)
+
+        exam_scores = [
+            grade.score for grade in records
+            if grade.kind == 'exam' and grade.score is not None
+        ]
+        student_summary = {
+            'average': sum(exam_scores) / len(exam_scores) if exam_scores else None,
+            'grade_count': len(records),
+            'debt_count': sum(1 for row in student_grades if row['has_debt']),
+        }
+
+    if selected_subject_model is not None:
+        subject_group_models = selected_subject_model.groups
+        selected_group_model = next(
+            (group for group in subject_group_models if group.id == requested_group_id),
+            None,
+        )
+        if selected_group_model is not None:
+            selected_group = next(
+                (group for group in groups if group['id'] == selected_group_model.id),
+                None,
+            )
+            assigned_group_ids = {selected_group_model.id}
+        else:
+            assigned_group_ids = {group.id for group in subject_group_models}
+
+        enrolled_students = [
+            student for student in student_models
+            if student.group_id in assigned_group_ids
+        ]
+        enrolled_students.sort(
+            key=lambda student: (student.group.name.casefold(), student.full_name.casefold())
+        )
+        grades_by_student = {
+            grade.student_id: grade
+            for grade in service.for_subject(selected_subject_model.id)
+        }
+
+        for student in enrolled_students:
+            grade = grades_by_student.get(student.id)
+            if grade is not None:
+                row = grade_to_dict(grade)
+            else:
+                row = {
+                    'id': None,
+                    'kind': None,
+                    'kind_name': '—',
+                    'result': 'Не складено',
+                    'has_debt': True,
+                    'debt_status': 'Є',
+                }
+            row.update({
+                'student_name': student.full_name,
+                'group_name': student.group.name,
+                'course': student.group.course,
+            })
+            subject_students.append(row)
+
+        subject_summary = {
+            'student_count': len(subject_students),
+            'passed_count': sum(1 for row in subject_students if not row['has_debt']),
+            'debt_count': sum(1 for row in subject_students if row['has_debt']),
+        }
+
+    return render_template(
+        'grades.html',
+        students=students,
+        subjects=subjects,
+        groups=groups,
+        selected_student=selected_student,
+        selected_subject=selected_subject,
+        selected_group=selected_group,
+        student_grades=student_grades,
+        student_summary=student_summary,
+        subject_students=subject_students,
+        subject_summary=subject_summary,
+    )
 
 
 @web.get('/reports')
