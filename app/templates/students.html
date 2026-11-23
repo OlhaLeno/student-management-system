@@ -33,6 +33,12 @@
             {% for item in groups %}<option value="{{ item.id }}">{{ item.name }} ({{ item.specialty_name }})</option>{% endfor %}
         </select>
     </div>
+    <div class="col-auto align-self-end">
+        <button type="button" class="btn btn-outline-secondary"
+                id="student-filter-reset">
+            Скинути фільтри
+        </button>
+    </div>
 </div>
 <div class="table-responsive">
     <table class="table table-bordered table-hover bg-white align-middle" id="students-table">

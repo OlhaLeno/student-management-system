@@ -280,8 +280,8 @@ class AcademicGroupService:
 
         SpecialtyService().get_by_id(specialty_id)
 
-        if type(course) is not int or course < 1:
-            raise ValueError("Курс має бути додатним цілим числом.")
+        if type(course) is not int or not 1 <= course <= 6:
+            raise ValueError("Курс має бути цілим числом від 1 до 6.")
 
         existing = AcademicGroup.query.filter_by(
             name=name,

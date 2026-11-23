@@ -116,6 +116,16 @@ if (studentSearch && groupFilter) {
     }
     studentSearch.addEventListener('input', filterStudents);
     groupFilter.addEventListener('change', filterStudents);
+
+    const resetButton = document.getElementById('student-filter-reset');
+
+    if (resetButton) {
+        resetButton.addEventListener('click', () => {
+            studentSearch.value = '';
+            groupFilter.value = '';
+            filterStudents();
+        });
+    }
 }
 
 function filterSubjects(select, groupId) {
