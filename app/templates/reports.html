@@ -41,12 +41,12 @@
     </table></div>
 </div></section>
 <section class="card mb-4"><div class="card-body">
-    <h2 class="h5 mb-2">2. Статистика за викладачами</h2>
-    <p class="small text-secondary">Враховується фільтр «Викладач». Кількість результатів включає іспити та заліки.</p>
+    <h2 class="h5 mb-2">2. Успішність студентів за дисциплінами</h2>
+    <p class="small text-secondary">Враховується фільтр «Викладач». Для кожної дисципліни враховуються всі студенти груп, яким її призначено. Середній бал обчислюється лише за числовими оцінками іспитів. «Складено» — іспит від 51 бала або зарахований залік. «Не складено» — іспит до 50 балів включно, незарахований залік або відсутній результат.</p>
     <div class="table-responsive"><table class="table table-bordered table-hover align-middle mb-0">
-        <thead class="table-light"><tr><th>Викладач</th><th>Середній бал</th><th>Кількість результатів</th></tr></thead>
-        <tbody>{% for t in teacher_report.teachers %}<tr><td>{{ t.teacher_name }}</td><td>{{ average(t.average) }}</td><td>{{ t.grade_count }}</td></tr>
-        {% else %}{{ empty_row(3) }}{% endfor %}</tbody>
+        <thead class="table-light"><tr><th>Викладач</th><th>Дисципліна</th><th>Середній бал</th><th>Складено</th><th>Не складено</th></tr></thead>
+        <tbody>{% for t in teacher_report.teachers %}<tr><td>{{ t.teacher_name }}</td><td>{{ t.subject_name }}</td><td>{{ average(t.average) }}</td><td class="text-success">{{ t.passed_count }}</td><td class="text-danger">{{ t.failed_count }}</td></tr>
+        {% else %}{{ empty_row(5) }}{% endfor %}</tbody>
     </table></div>
 </div></section>
 <section class="card mb-4"><div class="card-body">

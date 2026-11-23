@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 
-from app.dal.models import Grade, Student
+from app.dal.models import Grade, Student, Teacher
 from app.dal.database import db
 from app.bll.grade_calculator import GradeCalculator
 
@@ -77,35 +77,73 @@ class TeacherReport(ReportStrategy):
         grades: list[Grade],
         filters: dict
     ) -> dict:
+        teacher_query = db.session.query(Teacher).order_by(Teacher.full_name)
+        teacher_id = filters.get("teacher_id")
+        if teacher_id is not None:
+            teacher_query = teacher_query.filter(Teacher.id == teacher_id)
 
-        teachers = {}
-        calc = GradeCalculator()
-
-        for grade in grades:
-            teacher = grade.subject.teacher
-
-            if "teacher_id" in filters:
-                if teacher.id != filters["teacher_id"]:
-                    continue
-
-            teachers.setdefault(teacher.id, []).append(grade)
+        teachers = teacher_query.all()
+        grades_by_student_subject = {
+            (grade.student_id, grade.subject_id): grade
+            for grade in grades
+        }
 
         results = []
 
-        for teacher_id, items in teachers.items():
-            teacher = items[0].subject.teacher
+        for teacher in teachers:
+            for subject in sorted(teacher.subjects, key=lambda item: item.name.casefold()):
+                groups = sorted(subject.groups, key=lambda item: item.name.casefold())
+                if not groups:
+                    continue
 
-            results.append({
-                "teacher_id": teacher_id,
-                "teacher_name": teacher.full_name,
-                "average": calc.average(items),
-                "grade_count": len(items)
-            })
+                students = [student for group in groups for student in group.students]
+                exam_scores = []
+                passed_count = 0
+                failed_count = 0
 
-        return {
-            "teachers": results
-        }
+                for student in students:
+                    grade = grades_by_student_subject.get((student.id, subject.id))
 
+                    if grade is None:
+                        failed_count += 1
+                        continue
+
+                    if grade.kind == "exam":
+                        score = grade.score
+                        if score is None:
+                            failed_count += 1
+                            continue
+
+                        exam_scores.append(score)
+                        if score >= 51:
+                            passed_count += 1
+                        else:
+                            failed_count += 1
+
+                    elif grade.kind == "credit":
+                        if grade.passed is True:
+                            passed_count += 1
+                        else:
+                            failed_count += 1
+                    else:
+                        failed_count += 1
+
+                average = (
+                    sum(exam_scores) / len(exam_scores)
+                    if exam_scores else None
+                )
+
+                results.append({
+                    "teacher_id": teacher.id,
+                    "teacher_name": teacher.full_name,
+                    "subject_id": subject.id,
+                    "subject_name": subject.name,
+                    "average": average,
+                    "passed_count": passed_count,
+                    "failed_count": failed_count,
+                })
+
+        return {"teachers": results}
 
 
 class DebtReport(ReportStrategy):
@@ -161,7 +199,6 @@ class DebtReport(ReportStrategy):
 
 
 class StudentReport(ReportStrategy):
-    """Повна успішність одного студента за призначеними його групі дисциплінами."""
 
     def generate(self, grades: list[Grade], filters: dict) -> dict:
         student_id = filters.get("student_id")
