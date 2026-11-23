@@ -207,7 +207,7 @@ class ExamGrade(Grade):
         return value
 
     def is_debt(self):
-        return self.score <= 50
+        return self.score is None or self.score <= 50
 
 
 class CreditGrade(Grade):
@@ -224,4 +224,4 @@ class CreditGrade(Grade):
         return value
 
     def is_debt(self):
-        return not self.passed
+        return self.passed is not True

@@ -26,7 +26,7 @@
 </div></section>
 <section class="card mb-4"><div class="card-body">
     <h2 class="h5 mb-2">1. Успішність за групами та курсами</h2>
-    <p class="small text-secondary">Враховуються фільтри «Група» та «Курс». Середній бал обчислюється лише за іспитами.</p>
+    <p class="small text-secondary">Враховуються фільтри «Група» та «Курс». Середній бал обчислюється за внесеними оцінками іспитів. Відсутній результат або незадовільна оцінка враховуються як академічний борг.</p>
     <h3 class="h6">За групами</h3>
     <div class="table-responsive"><table class="table table-bordered table-hover align-middle">
         <thead class="table-light"><tr><th>Група</th><th>Курс</th><th>Середній бал</th><th>Кількість боргів</th></tr></thead>
@@ -54,10 +54,9 @@
     {% if student_report %}
     <p class="mb-2"><strong>{{ student_report.student_name }}</strong> — {{ student_report.group_name }}, {{ student_report.course }} курс</p>
     <div class="row g-2 mb-3">
-        <div class="col-md-3"><div class="border rounded p-2">Середній бал: <strong>{{ average(student_report.average) }}</strong></div></div>
-        <div class="col-md-3"><div class="border rounded p-2">Внесено результатів: <strong>{{ student_report.grade_count }}</strong></div></div>
-        <div class="col-md-3"><div class="border rounded p-2">Боргів: <strong>{{ student_report.debt_count }}</strong></div></div>
-        <div class="col-md-3"><div class="border rounded p-2">Без оцінки: <strong>{{ student_report.pending_count }}</strong></div></div>
+        <div class="col-md-4"><div class="border rounded p-2">Середній бал: <strong>{{ average(student_report.average) }}</strong></div></div>
+        <div class="col-md-4"><div class="border rounded p-2">Внесено результатів: <strong>{{ student_report.grade_count }}</strong></div></div>
+        <div class="col-md-4"><div class="border rounded p-2">Академічних боргів: <strong>{{ student_report.debt_count }}</strong></div></div>
     </div>
     <div class="table-responsive"><table class="table table-bordered table-hover align-middle mb-2">
         <thead class="table-light"><tr><th>Дисципліна</th><th>Викладач</th><th>Вид контролю</th><th>Результат</th><th>Борг</th></tr></thead>
@@ -71,18 +70,18 @@
         </tr>
         {% else %}{{ empty_row(5) }}{% endfor %}</tbody>
     </table></div>
-    <p class="small text-secondary mb-0">Показані всі дисципліни, призначені групі студента, та раніше внесені результати. «Не внесено» не вважається боргом. Середній бал обчислюється лише за іспитами. Інші фільтри на цю таблицю не впливають.</p>
+    <p class="small text-secondary mb-0">Показані всі дисципліни, призначені групі студента, та раніше внесені результати. Якщо результат відсутній, дисципліна вважається нескладеною та враховується як академічний борг. Середній бал обчислюється лише за внесеними оцінками іспитів. Інші фільтри на цю таблицю не впливають.</p>
     {% else %}
     <p class="text-secondary mb-0">Оберіть студента у фільтрі вгорі та натисніть «Сформувати», щоб побачити всі його дисципліни, оцінки, заліки та борги.</p>
     {% endif %}
 </div></section>
 <section class="card mb-4"><div class="card-body">
     <h2 class="h5 mb-2">4. Академічна заборгованість</h2>
-    <p class="small text-secondary">Враховуються всі вибрані фільтри: група, курс, викладач та студент.</p>
+    <p class="small text-secondary">Враховуються всі вибрані фільтри: група, курс, викладач та студент. Відсутній результат для дисципліни, призначеної групі, також вважається академічним боргом; вид контролю для такого запису не визначений.</p>
     <p>Загальна кількість боргів: <strong>{{ debt_report.debt_count }}</strong></p>
     <div class="table-responsive"><table class="table table-bordered table-hover align-middle mb-0">
         <thead class="table-light"><tr><th>Студент</th><th>Група</th><th>Курс</th><th>Дисципліна</th><th>Викладач</th><th>Вид контролю</th><th>Результат</th></tr></thead>
-        <tbody>{% for d in debt_report.debts %}<tr><td>{{ d.student_name }}</td><td>{{ d.group_name }}</td><td>{{ d.course }}</td><td>{{ d.subject_name }}</td><td>{{ d.teacher_name }}</td><td>{{ 'Іспит' if d.kind == 'exam' else 'Залік' }}</td><td class="text-danger">{{ d.result }}</td></tr>
+        <tbody>{% for d in debt_report.debts %}<tr><td>{{ d.student_name }}</td><td>{{ d.group_name }}</td><td>{{ d.course }}</td><td>{{ d.subject_name }}</td><td>{{ d.teacher_name }}</td><td>{{ 'Іспит' if d.kind == 'exam' else ('Залік' if d.kind == 'credit' else '—') }}</td><td class="text-danger">{{ d.result }}</td></tr>
         {% else %}<tr><td colspan="7" class="text-center text-secondary">Академічних боргів не знайдено.</td></tr>{% endfor %}</tbody>
     </table></div>
 </div></section>

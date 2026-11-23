@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 
-from app.dal.models import Grade, Student, Teacher
+from app.dal.models import Grade, Student, Teacher, AcademicGroup
 from app.dal.database import db
 from app.bll.grade_calculator import GradeCalculator
 
@@ -23,50 +23,61 @@ class GroupReport(ReportStrategy):
         grades: list[Grade],
         filters: dict
     ) -> dict:
-
-        groups = {}
-        courses = {}
         calc = GradeCalculator()
+        group_query = db.session.query(AcademicGroup).order_by(AcademicGroup.name)
 
-        for grade in grades:
-            group = grade.student.group
+        group_id = filters.get("group_id")
+        if group_id is not None:
+            group_query = group_query.filter(AcademicGroup.id == group_id)
 
-            if "group_id" in filters:
-                if group.id != filters["group_id"]:
-                    continue
-
-            if "course" in filters:
-                if group.course != filters["course"]:
-                    continue
-
-            groups.setdefault(group.id, []).append(grade)
-            courses.setdefault(group.course, []).append(grade)
+        course = filters.get("course")
+        if course is not None:
+            group_query = group_query.filter(AcademicGroup.course == course)
 
         group_results = []
+        courses = {}
 
-        for group_id, items in groups.items():
-            group = items[0].student.group
+        for group in group_query.all():
+            if not group.students or not group.subjects:
+                continue
+
+            group_grades = []
+            group_debt_count = 0
+
+            for student in group.students:
+                for _, grade in calc.assigned_results(student):
+                    if calc.is_debt(grade):
+                        group_debt_count += 1
+                    if grade is not None:
+                        group_grades.append(grade)
 
             group_results.append({
-                "group_id": group_id,
+                "group_id": group.id,
                 "group_name": group.name,
                 "course": group.course,
-                "average": calc.average(items),
-                "debt_count": len(calc.debts(items))
+                "average": calc.average(group_grades),
+                "debt_count": group_debt_count,
             })
 
-        course_results = []
+            course_data = courses.setdefault(
+                group.course,
+                {"grades": [], "debt_count": 0},
+            )
+            course_data["grades"].extend(group_grades)
+            course_data["debt_count"] += group_debt_count
 
-        for course, items in sorted(courses.items()):
-            course_results.append({
-                "course": course,
-                "average": calc.average(items),
-                "debt_count": len(calc.debts(items))
-            })
+        course_results = [
+            {
+                "course": course_number,
+                "average": calc.average(data["grades"]),
+                "debt_count": data["debt_count"],
+            }
+            for course_number, data in sorted(courses.items())
+        ]
 
         return {
             "groups": group_results,
-            "courses": course_results
+            "courses": course_results,
         }
 
 
@@ -153,48 +164,62 @@ class DebtReport(ReportStrategy):
         grades: list[Grade],
         filters: dict
     ) -> dict:
-
         calc = GradeCalculator()
-        debts = calc.debts(grades)
+        grades_by_student_subject = {
+            (grade.student_id, grade.subject_id): grade
+            for grade in grades
+        }
 
+        group_query = db.session.query(AcademicGroup).order_by(AcademicGroup.name)
+        group_id = filters.get("group_id")
+        if group_id is not None:
+            group_query = group_query.filter(AcademicGroup.id == group_id)
+
+        course = filters.get("course")
+        if course is not None:
+            group_query = group_query.filter(AcademicGroup.course == course)
+
+        student_id = filters.get("student_id")
+        teacher_id = filters.get("teacher_id")
         results = []
 
-        for grade in debts:
-            student = grade.student
-            group = student.group
-            subject = grade.subject
-
-            if "group_id" in filters:
-                if group.id != filters["group_id"]:
+        for group in group_query.all():
+            for student in sorted(group.students, key=lambda item: item.full_name.casefold()):
+                if student_id is not None and student.id != student_id:
                     continue
 
-            if "course" in filters:
-                if group.course != filters["course"]:
-                    continue
+                for subject, _ in calc.assigned_results(student):
+                    if teacher_id is not None and subject.teacher_id != teacher_id:
+                        continue
 
-            if "student_id" in filters:
-                if student.id != filters["student_id"]:
-                    continue
+                    grade = grades_by_student_subject.get((student.id, subject.id))
+                    if not calc.is_debt(grade):
+                        continue
 
-            if "teacher_id" in filters:
-                if subject.teacher_id != filters["teacher_id"]:
-                    continue
+                    if grade is None:
+                        kind = None
+                        result = "Не складено"
+                    elif grade.kind == "exam":
+                        kind = grade.kind
+                        result = grade.score if grade.score is not None else "Не складено"
+                    else:
+                        kind = grade.kind
+                        result = "Не зараховано"
 
-            results.append({
-                "student_id": student.id,
-                "student_name": student.full_name,
-                "group_name": group.name,
-                "course": group.course,
-                "subject_name": subject.name,
-                "teacher_name": subject.teacher.full_name,
-                "kind": grade.kind,
-                "result": grade.score if grade.kind == "exam"
-                          else "Не зараховано"
-            })
+                    results.append({
+                        "student_id": student.id,
+                        "student_name": student.full_name,
+                        "group_name": group.name,
+                        "course": group.course,
+                        "subject_name": subject.name,
+                        "teacher_name": subject.teacher.full_name,
+                        "kind": kind,
+                        "result": result,
+                    })
 
         return {
             "debt_count": len(results),
-            "debts": results
+            "debts": results,
         }
 
 
@@ -209,39 +234,37 @@ class StudentReport(ReportStrategy):
         if student is None:
             raise LookupError("Студента не знайдено.")
 
-        student_grades = [g for g in grades if g.student_id == student_id]
-        grades_by_subject = {g.subject_id: g for g in student_grades}
-
-        subjects_by_id = {subject.id: subject for subject in student.group.subjects}
-        for grade in student_grades:
-            subjects_by_id[grade.subject_id] = grade.subject
+        calc = GradeCalculator()
+        assigned_results = calc.assigned_results(student)
+        student_grades = [grade for _, grade in assigned_results if grade is not None]
 
         results = []
-        for subject in sorted(subjects_by_id.values(), key=lambda s: s.name.casefold()):
-            grade = grades_by_subject.get(subject.id)
+        for subject, grade in assigned_results:
             if grade is None:
                 results.append({
                     "subject_name": subject.name,
                     "teacher_name": subject.teacher.full_name,
                     "kind": None,
                     "kind_name": "—",
-                    "result": "Не внесено",
-                    "has_debt": None,
+                    "result": "Не складено",
+                    "has_debt": True,
                 })
-            else:
-                is_exam = grade.kind == "exam"
-                results.append({
-                    "subject_name": subject.name,
-                    "teacher_name": subject.teacher.full_name,
-                    "kind": grade.kind,
-                    "kind_name": "Іспит" if is_exam else "Залік",
-                    "result": grade.score if is_exam else (
-                        "Зараховано" if grade.passed else "Не зараховано"
-                    ),
-                    "has_debt": grade.is_debt(),
-                })
+                continue
 
-        calc = GradeCalculator()
+            is_exam = grade.kind == "exam"
+            results.append({
+                "subject_name": subject.name,
+                "teacher_name": subject.teacher.full_name,
+                "kind": grade.kind,
+                "kind_name": "Іспит" if is_exam else "Залік",
+                "result": (
+                    grade.score if grade.score is not None else "Не складено"
+                ) if is_exam else (
+                    "Зараховано" if grade.passed is True else "Не зараховано"
+                ),
+                "has_debt": calc.is_debt(grade),
+            })
+
         return {
             "student_id": student.id,
             "student_name": student.full_name,
@@ -249,7 +272,6 @@ class StudentReport(ReportStrategy):
             "course": student.group.course,
             "average": calc.average(student_grades),
             "grade_count": len(student_grades),
-            "debt_count": len(calc.debts(student_grades)),
-            "pending_count": sum(r["has_debt"] is None for r in results),
+            "debt_count": sum(1 for _, grade in assigned_results if calc.is_debt(grade)),
             "subjects": results,
         }
