@@ -290,3 +290,90 @@ if (gradeEditForm) {
             gradeEditForm.querySelector('[type="submit"]'));
     });
 }
+
+const notificationArea = document.getElementById('notification-area');
+if (notificationArea) {
+    const notificationToggle = document.getElementById('notification-toggle');
+    const notificationMenu = document.getElementById('notification-menu');
+    const notificationCount = document.getElementById('notification-count');
+    const markAllButton = document.getElementById('notification-mark-all');
+
+    let unreadCount = Number(notificationCount.dataset.unreadCount || 0);
+
+    function setUnreadCount(count) {
+        unreadCount = count;
+        notificationCount.dataset.unreadCount = String(count);
+        notificationCount.textContent = count > 99 ? '99+' : String(count);
+        notificationCount.classList.toggle('d-none', count === 0);
+        if (markAllButton) markAllButton.classList.toggle('d-none', count === 0);
+    }
+
+    async function markAsRead(item) {
+        if (item.dataset.notificationRead === 'true') return;
+
+        const response = await fetch(
+            `/api/notifications/${item.dataset.notificationId}/read`,
+            {method: 'PATCH'}
+        );
+        if (!response.ok) {
+            const result = await response.json().catch(() => ({}));
+            throw new Error(result.error || 'Не вдалося оновити сповіщення.');
+        }
+
+        item.dataset.notificationRead = 'true';
+        item.classList.remove('unread');
+        setUnreadCount(Math.max(0, unreadCount - 1));
+    }
+
+    notificationToggle.addEventListener('click', () => {
+        const isOpening = notificationMenu.classList.contains('d-none');
+        notificationMenu.classList.toggle('d-none');
+        notificationToggle.setAttribute('aria-expanded', String(isOpening));
+    });
+
+    document.addEventListener('click', event => {
+        if (!notificationArea.contains(event.target)) {
+            notificationMenu.classList.add('d-none');
+            notificationToggle.setAttribute('aria-expanded', 'false');
+        }
+    });
+
+    document.addEventListener('keydown', event => {
+        if (event.key === 'Escape') {
+            notificationMenu.classList.add('d-none');
+            notificationToggle.setAttribute('aria-expanded', 'false');
+        }
+    });
+
+    document.querySelectorAll('[data-notification-id]').forEach(item => {
+        item.addEventListener('click', async () => {
+            try {
+                await markAsRead(item);
+            } catch (error) {
+                showError(error.message);
+            }
+        });
+    });
+
+    if (markAllButton) {
+        markAllButton.addEventListener('click', async () => {
+            try {
+                const response = await fetch('/api/notifications/read-all', {
+                    method: 'PATCH'
+                });
+                if (!response.ok) {
+                    const result = await response.json().catch(() => ({}));
+                    throw new Error(result.error || 'Не вдалося оновити сповіщення.');
+                }
+
+                document.querySelectorAll('[data-notification-id]').forEach(item => {
+                    item.dataset.notificationRead = 'true';
+                    item.classList.remove('unread');
+                });
+                setUnreadCount(0);
+            } catch (error) {
+                showError(error.message);
+            }
+        });
+    }
+}

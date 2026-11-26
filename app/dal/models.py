@@ -225,3 +225,16 @@ class CreditGrade(Grade):
 
     def is_debt(self):
         return self.passed is not True
+
+
+class Notification(db.Model):
+    __tablename__ = "notifications"
+
+    id = db.Column(db.Integer, primary_key=True)
+    title = db.Column(db.String(100), nullable=False)
+    message = db.Column(db.Text, nullable=False)
+    event_type = db.Column(db.String(40), nullable=False)
+    is_read = db.Column(db.Boolean, nullable=False, default=False)
+    created_at = db.Column(
+        db.DateTime, nullable=False, default=db.func.current_timestamp()
+    )

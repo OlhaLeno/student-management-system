@@ -3,6 +3,7 @@ from datetime import time
 from app.dal.database import db
 from app.dal.models import ScheduleEntry, AcademicGroup, Subject
 from app.bll.service_utils import validate_text, get_required, commit
+from app.bll.observer import publish_event, schedule_slot_data
 
 
 class ScheduleService:
@@ -85,6 +86,20 @@ class ScheduleService:
             start_time, end_time, classroom, entry_id
         )
 
+        old_slot = schedule_slot_data(entry)
+        slot_changed = (
+            entry.group_id != group_id
+            or entry.day != day
+            or entry.start_time != start_time
+            or entry.end_time != end_time
+        )
+        if slot_changed:
+            publish_event(
+                "schedule_slot_freed",
+                slot=old_slot,
+                reason="Після редагування заняття у розкладі звільнився попередній час.",
+            )
+
         entry.group_id = group_id
         entry.subject_id = subject_id
         entry.day = day
@@ -98,6 +113,12 @@ class ScheduleService:
 
     def delete(self, entry_id: int) -> None:
         entry = self.get_by_id(entry_id)
+
+        publish_event(
+            "schedule_slot_freed",
+            slot=schedule_slot_data(entry),
+            reason="Заняття видалено з розкладу.",
+        )
 
         db.session.delete(entry)
         commit()

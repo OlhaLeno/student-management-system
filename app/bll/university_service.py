@@ -2,6 +2,7 @@ from app.dal.database import db
 from app.dal.models import Institute, Specialty, AcademicGroup, Subject
 
 from app.bll.service_utils import validate_text, get_required, commit
+from app.bll.observer import publish_event, schedule_slot_data
 
 class InstituteService:
 
@@ -249,6 +250,11 @@ class AcademicGroupService:
 
         if subject not in group.subjects:
             group.subjects.append(subject)
+            publish_event(
+                "subject_assigned",
+                group_name=group.name,
+                subject_name=subject.name,
+            )
             commit()
 
     def remove_subject(self, group_id: int, subject_id: int):
@@ -261,9 +267,18 @@ class AcademicGroupService:
         if subject not in group.subjects:
             raise ValueError("Група не вивчає цю дисципліну.")
 
+        freed_slots = []
         for entry in list(group.schedule_entries):
             if entry.subject_id == subject_id:
+                freed_slots.append(schedule_slot_data(entry))
                 db.session.delete(entry)
+
+        publish_event(
+            "subject_removed",
+            subject_name=subject.name,
+            groups=[group.name],
+            freed_slots=freed_slots,
+        )
 
         for student in list(group.students):
             for grade in list(student.grades):

@@ -9,10 +9,53 @@
 </head>
 <body>
     <header class="bg-dark text-white py-3">
-        <div class="container">
+        <div class="container d-flex justify-content-between align-items-center gap-3">
             <a class="text-white text-decoration-none fs-5" href="{{ url_for('web.index') }}">
                 Система обліку студентів
             </a>
+
+            <div class="notification-area" id="notification-area">
+                <button class="notification-toggle" id="notification-toggle"
+                        type="button" aria-label="Сповіщення" aria-expanded="false"
+                        aria-controls="notification-menu">
+                    <span aria-hidden="true">🔔</span>
+                    <span class="notification-count{% if unread_notifications_count == 0 %} d-none{% endif %}"
+                          id="notification-count"
+                          data-unread-count="{{ unread_notifications_count }}">
+                        {{ unread_notifications_count if unread_notifications_count <= 99 else '99+' }}
+                    </span>
+                </button>
+
+                <section class="notification-menu d-none" id="notification-menu"
+                         aria-label="Останні сповіщення">
+                    <div class="notification-menu-header">
+                        <strong>Сповіщення</strong>
+                        <button type="button"
+                                class="btn btn-sm btn-link p-0{% if unread_notifications_count == 0 %} d-none{% endif %}"
+                                id="notification-mark-all">
+                            Позначити всі прочитаними
+                        </button>
+                    </div>
+                    <div class="notification-list" id="notification-list">
+                        {% for item in recent_notifications %}
+                            <button type="button"
+                                    class="notification-item{% if not item.is_read %} unread{% endif %}"
+                                    data-notification-id="{{ item.id }}"
+                                    data-notification-read="{{ 'true' if item.is_read else 'false' }}">
+                                <span class="notification-item-title">{{ item.title }}</span>
+                                <span class="notification-item-message">{{ item.message }}</span>
+                                <span class="notification-item-date">
+                                    {{ item.created_at.strftime('%d.%m.%Y %H:%M') }}
+                                </span>
+                            </button>
+                        {% else %}
+                            <p class="notification-empty" id="notification-empty">
+                                Поки що сповіщень немає.
+                            </p>
+                        {% endfor %}
+                    </div>
+                </section>
+            </div>
         </div>
     </header>
 

@@ -14,3 +14,131 @@ header.bg-dark {
 .nav-link.active {
     color: #215ba0;
 }
+
+
+.notification-area {
+    position: relative;
+}
+
+.notification-toggle {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 42px;
+    height: 42px;
+    border: 1px solid rgba(255, 255, 255, 0.45);
+    border-radius: 50%;
+    background: transparent;
+    color: #fff;
+    font-size: 1.2rem;
+}
+
+.notification-toggle:hover,
+.notification-toggle:focus-visible {
+    background: rgba(255, 255, 255, 0.12);
+}
+
+.notification-count {
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    min-width: 19px;
+    height: 19px;
+    padding: 0 5px;
+    border-radius: 999px;
+    background: #dc3545;
+    color: #fff;
+    font-size: 0.7rem;
+    line-height: 19px;
+    font-weight: 700;
+}
+
+.notification-menu {
+    position: absolute;
+    z-index: 1050;
+    top: calc(100% + 10px);
+    right: 0;
+    width: min(390px, calc(100vw - 2rem));
+    max-height: 430px;
+    overflow: hidden;
+    border: 1px solid #dee2e6;
+    border-radius: 0.5rem;
+    background: #fff;
+    color: #212529;
+    box-shadow: 0 0.5rem 1.25rem rgba(0, 0, 0, 0.18);
+}
+
+.notification-menu-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 0.8rem 1rem;
+    border-bottom: 1px solid #dee2e6;
+}
+
+.notification-menu-header strong {
+    white-space: nowrap;
+}
+
+.notification-list {
+    max-height: 370px;
+    overflow-y: auto;
+}
+
+.notification-item {
+    display: block;
+    width: 100%;
+    padding: 0.8rem 1rem;
+    border: 0;
+    border-bottom: 1px solid #e9ecef;
+    background: #fff;
+    color: #212529;
+    text-align: left;
+}
+
+.notification-item:last-child {
+    border-bottom: 0;
+}
+
+.notification-item:hover {
+    background: #f8f9fa;
+}
+
+.notification-item.unread {
+    background: #eef5ff;
+}
+
+.notification-item.unread:hover {
+    background: #e4efff;
+}
+
+.notification-item-title,
+.notification-item-message,
+.notification-item-date {
+    display: block;
+}
+
+.notification-item-title {
+    margin-bottom: 0.25rem;
+    font-weight: 600;
+}
+
+.notification-item-message {
+    font-size: 0.9rem;
+    line-height: 1.4;
+}
+
+.notification-item-date {
+    margin-top: 0.4rem;
+    color: #6c757d;
+    font-size: 0.75rem;
+}
+
+.notification-empty {
+    margin: 0;
+    padding: 1rem;
+    color: #6c757d;
+    text-align: center;
+}

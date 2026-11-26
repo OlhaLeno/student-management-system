@@ -1,7 +1,7 @@
-
 from app.dal.database import db
 from app.dal.models import Teacher, Subject
 from app.bll.service_utils import validate_text, get_required, commit
+from app.bll.observer import publish_event, schedule_slot_data
 
 
 class TeacherService:
@@ -39,6 +39,33 @@ class TeacherService:
 
     def delete(self, teacher_id: int) -> None:
         teacher = self.get_by_id(teacher_id)
+
+        group_subjects = {}
+        freed_slots = []
+
+        for subject in list(teacher.subjects):
+            for group in list(subject.groups):
+                item = group_subjects.setdefault(
+                    group.id,
+                    {"group_name": group.name, "subjects": []}
+                )
+                item["subjects"].append(subject.name)
+
+            for entry in list(subject.schedule_entries):
+                freed_slots.append(schedule_slot_data(entry))
+
+        publish_event(
+            "teacher_deleted",
+            teacher_name=teacher.full_name,
+            group_subjects=[
+                {
+                    **item,
+                    "subjects": sorted(set(item["subjects"]), key=str.casefold)
+                }
+                for item in group_subjects.values()
+            ],
+            freed_slots=freed_slots,
+        )
 
         db.session.delete(teacher)
         commit()
@@ -99,6 +126,19 @@ class SubjectService:
 
     def delete(self, subject_id: int) -> None:
         subject = self.get_by_id(subject_id)
+
+        groups = [group.name for group in list(subject.groups)]
+        freed_slots = [
+            schedule_slot_data(entry)
+            for entry in list(subject.schedule_entries)
+        ]
+
+        publish_event(
+            "subject_removed",
+            subject_name=subject.name,
+            groups=groups,
+            freed_slots=freed_slots,
+        )
 
         db.session.delete(subject)
         commit()
